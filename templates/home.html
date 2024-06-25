@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         /* Reset default margin and padding for all elements */
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
@@ -30,7 +28,7 @@
             background-color: #fff; /* White background for content */
             padding: 20px; /* Padding inside the content area */
             box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Shadow for a subtle lift */
-            max-width: 1000px; /* Limit width to prevent stretching */
+            max-width: 2000px; /* Limit width to prevent stretching */
             margin: auto; /* Center the content horizontally */
             transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition on hover */
             position: relative; /* For absolute positioning of links */
@@ -43,7 +41,7 @@
 
         .home-content1 img {
             width: 100%; /* Image width fills its container */
-            max-width: 1000px; /* Limit maximum width */
+            max-width: 2000px; /* Limit maximum width */
             height: auto; /* Maintain aspect ratio */
             border-radius: 8px; /* Rounded corners for the image */
             margin-bottom: 20px; /* Margin below the image */
@@ -128,8 +126,8 @@
 
         .heading1 {
             position: absolute;
-            top: 100px; /* Adjust as needed */
-            left: 180px; /* Adjust as needed */
+            top: 150px; /* Adjust as needed */
+            left: 250px; /* Adjust as needed */
             color: #555; /* Darker text color */
             font-size: 24px;
             font-weight: bold;
@@ -143,8 +141,8 @@
         }
 		.heading2 {
             position: absolute;
-            top: 250px; /* Adjust as needed */
-            left: 180px; /* Adjust as needed */
+            top: 350px; /* Adjust as needed */
+            left: 250px; /* Adjust as needed */
             color: #555; /* Darker text color */
             font-size: 24px;
             font-weight: bold;
@@ -158,8 +156,8 @@
         }
 		.heading3 {
             position: absolute;
-            top: 380px; /* Adjust as needed */
-            left: 190px; /* Adjust as needed */
+            top: 550px; /* Adjust as needed */
+            left: 270px; /* Adjust as needed */
             color: #555; /* Darker text color */
             font-size: 24px;
             font-weight: bold;
@@ -173,14 +171,11 @@
         }
 		.login-box {
             position: absolute;
-            top: 60px; /* Adjust as needed */
-            right: 10px; /* Adjust as needed */
-            background-color: #fff;
-            padding: 20px;
+            top: 100px; /* Adjust as needed */
+            right: 100px; /* Adjust as needed */
+            padding: 40px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-						 z-index: 2; /* Ensure image is below overlay */
-
+			z-index: 1; /* Ensure image is below overlay */
         }
 
         .login-box h2 {
@@ -223,8 +218,8 @@
         }
 		.register-link {
             position: absolute;
-            top: 420px; /* Adjust as needed */
-            right: 30px; /* Adjust as needed */
+            top: 450px; /* Adjust as needed */
+            right: 140px; /* Adjust as needed */
             font-size: 16px;
             color: #333;
         }
@@ -268,7 +263,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <form action="{{ url_for('login') }}" method="POST">
+    <form action="{{ url_for('home') }}" method="POST">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br><br>
         
