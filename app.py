@@ -52,6 +52,7 @@ def register():
                 conn.commit()
                 flash('Registration successful', 'success')
                 return redirect(url_for('home'))
+
         except Exception as e:
             flash(f'Error: {str(e)}', 'error')
 
@@ -59,7 +60,6 @@ def register():
             cursor.close()
 
     return render_template('register.html')
-
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -72,13 +72,15 @@ def home():
 
         try:
             # Validate user credentials
-            cursor.execute("SELECT * FROM USERS WHERE UserName = %s AND Password = %s",
+
+            cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s",
                            (username, password))
             user = cursor.fetchone()
             if user:
                 session['username'] = username
                 flash('Login successful', 'success')
                 return redirect(url_for('dashboard'))
+
             else:
                 flash('Invalid username or password', 'error')
         except Exception as e:
@@ -159,6 +161,7 @@ def dashboard():
         cursor.close()
 
     return render_template('dashboard.html', username=session['username'], expense_labels=expense_labels, expense_data=expense_data, income_labels=income_labels, income_data=income_data)
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
