@@ -161,6 +161,31 @@ def dashboard():
         cursor.close()
 
     return render_template('dashboard.html', username=session['username'], expense_labels=expense_labels, expense_data=expense_data, income_labels=income_labels, income_data=income_data)
+@app.route('/SavingsGoals', methods=['GET', 'POST'])
+def savings_goals():
+    if 'username' not in session:
+        flash('Please log in to access the savings goals page.', 'error')
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        username = session['username']  # Assuming you have 'username' in session
+        SavingsGoalItem = request.form['SavingsGoalItem']
+        SavingsGoalAmount = float(request.form['SavingsGoalAmount'])
+        try:
+            conn = get_db()
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO SAVINGS_GOAL_TACKER (username, SavingsGoalItem, SavingsGoalAmount, created_at)
+                VALUES (%s, %s, %s, CURRENT_TIMESTAMP())
+            """, (username, SavingsGoalItem, SavingsGoalAmount))
+            conn.commit()
+            flash('Goal saved successfully', 'success')
+            cursor.close()
+        except Exception as e:
+            flash(f'Error saving goal: {str(e)}', 'error')
+        finally:
+            conn.close()
+
+    return render_template('SavingsGoals.html', username=session['username'])
 
 @app.route('/logout')
 def logout():
