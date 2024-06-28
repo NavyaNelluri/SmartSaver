@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Saved Goals</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+            background-image: url("{{ url_for('static', filename='homeimg2.png') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+        .goal-card {
+            background-color: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .goal-item {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        .goal-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .goal-details span {
+            display: block;
+            font-size: 16px;
+            color: #555;
+        }
+        .goal-details span strong {
+            color: #333;
+        }
+        .highlight {
+            background-color: #4CAF50;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+		 h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #4CAF50; /* Add color here */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Dreams, {{ username }}... Our Plan!!!</h1>
+        {% for goal in goals %}
+        <div class="goal-card">
+            <div class="goal-item">{{ goal[1] }}</div>
+            <div class="goal-details">
+                <span><strong>Savings Goal Amount:</strong> ${{ goal[2] }}</span>
+                <span><strong>Allocation Percentage:</strong> {{ goal[3] }}%</span>
+                <span><strong>Monthly Income:</strong> ${{ goal[4] }}</span>
+                <span><strong>Created At:</strong> {{ goal[5].strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                <span><strong>Months Left to Achieve Goal:</strong> <span class="highlight">{{ goal[6] }}</span></span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

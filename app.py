@@ -1,5 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import snowflake.connector as snowflake
+import datetime
+from datetime import timedelta
+
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your secret key
@@ -170,13 +174,15 @@ def savings_goals():
         username = session['username']  # Assuming you have 'username' in session
         SavingsGoalItem = request.form['SavingsGoalItem']
         SavingsGoalAmount = float(request.form['SavingsGoalAmount'])
+        MonthlyDisposableIncome = request.form['MonthlyIncome']
+        AllocationPercentage = request.form['AllocationPercentage']
         try:
             conn = get_db()
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO SAVINGS_GOAL_TACKER (username, SavingsGoalItem, SavingsGoalAmount, created_at)
-                VALUES (%s, %s, %s, CURRENT_TIMESTAMP())
-            """, (username, SavingsGoalItem, SavingsGoalAmount))
+                INSERT INTO SAVINGS_GOAL_TRACKER (username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome, created_at)
+                VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP())
+            """, (username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome))
             conn.commit()
             flash('Goal saved successfully', 'success')
             cursor.close()
@@ -186,6 +192,52 @@ def savings_goals():
             conn.close()
 
     return render_template('SavingsGoals.html', username=session['username'])
+@app.route('/ViewGoals',  methods=['GET', 'POST'])
+def view_goals():
+    username = session.get('username', 'Guest')  # Default to 'Guest' if not found
+
+    conn = get_db()
+    cursor = conn.cursor()
+    goals_with_months_left = []
+    today = datetime.datetime.now()
+
+    try:
+        cursor.execute("SELECT username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome, created_at FROM SAVINGS_GOAL_TRACKER")
+        goals = cursor.fetchall()
+        for goal in goals:
+            created_at = goal[5]  # Assuming created_at is the 6th element in each goal tuple
+            savings_goal_amount = float(goal[2])
+            allocation_percentage = float(goal[3])
+            monthly_income = float(goal[4])
+
+            # Calculate monthly allocation amount
+            monthly_allocation = monthly_income * (allocation_percentage / 100)
+            
+            # Calculate number of months required to reach the savings goal
+            months_to_goal = savings_goal_amount / monthly_allocation
+            
+            # Calculate the target date to achieve the goal
+            target_date = created_at + timedelta(days=float(months_to_goal) * 30)
+            
+            # Calculate months left from today to the target date
+            months_left = (target_date.year - today.year) * 12 + target_date.month - today.month
+            
+            goals_with_months_left.append((*goal, months_left))
+        
+        return render_template('ViewGoals.html', username=username, goals=goals_with_months_left)
+
+    except Exception as e:
+        # Handle error (print/log/display error message)
+        print(f"Error fetching goals: {str(e)}")
+        return render_template('ViewGoals.html', message="Error fetching goals. Please try again later.")
+
+    finally:
+        cursor.close()
+        conn.close()
+
+    # Make sure there's a return statement for every code path
+    return render_template('ViewGoals.html', username=username, goals=goals_with_months_left)
+
 
 @app.route('/logout')
 def logout():
