@@ -72,6 +72,22 @@
             color: white;
             margin-bottom: 15px;
         }
+		.savings-goals-link {
+            margin: 10px 0;
+        }
+        .savings-goals-link a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .savings-goals-link a:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -149,6 +165,9 @@
             </form>
 			<div class="savings-goals-link">
                 <a href="{{ url_for('savings_goals') }}">Set Savings Goals</a>
+            </div>
+			<div class="savings-goals-link">
+                <a href="{{ url_for('view_goals') }}">View Savings Goals</a>
             </div>
         </div>
 

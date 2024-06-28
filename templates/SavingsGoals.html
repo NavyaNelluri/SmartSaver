@@ -6,8 +6,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             padding: 20px;
+			background-image: url("{{ url_for('static', filename='homeimg2.png') }}");
+
         }
         .main-container {
             display: flex;
@@ -17,10 +18,9 @@
             flex: 1;
             max-width: 48%;
             margin: 0 auto;
-            background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
         }
         h1 {
@@ -93,20 +93,23 @@
         </script>
     {% endif %}
 {% endwith %}
-            <form action="/SavingsGoals" method="post">
+            <form id="saveForm" action="/SavingsGoals" method="post">
+				<label for="MonthlyIncome">Monthly Disposable Income ($):</label>
+				<input type="number" id="monthlyIncome" name="MonthlyIncome" required>
+				
                 <label for="SavingsGoalItem">Savings Goal Item:</label>
                 <input type="text" id="SavingsGoalItem" name="SavingsGoalItem" placeholder="e.g. House down payment" required>
                 
                 <label for="SavingsGoalAmount">Savings Goal Amount ($):</label>
                 <input type="number" id="SavingsGoalAmount" name="SavingsGoalAmount" required>
+				
+				<label for="AllocationPercentage">Allocation Percentage (%):</label>
+				<input type="number" id="allocationPercentage" name="AllocationPercentage" min="1" max="100" required>
                 
                 <button type="submit">Save Goal</button>
+
             </form>
-            
-            <div class="result">
-                <h2>Saved Goal:</h2>
-                <p id="saveResult">-</p>
-            </div>
+  
         </div>
     </div>
 
@@ -125,6 +128,7 @@
                 document.getElementById('forecastResult').textContent = "Invalid input. Please enter valid numbers.";
             }
         }
+		
     </script>
 </body>
 </html>
