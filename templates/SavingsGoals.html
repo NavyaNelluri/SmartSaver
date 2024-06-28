@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Savings Goals</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .goal-container, .save-container {
+            flex: 1;
+            max-width: 48%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="number"], input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="goal-container">
+            <h1>Forecast Your Goals</h1>
+
+            
+            <label for="monthlyIncome">Monthly Disposable Income ($):</label>
+            <input type="number" id="monthlyIncome" name="monthlyIncome" required>
+            
+            <label for="goalAmount">Savings Goal Amount ($):</label>
+            <input type="number" id="goalAmount" name="goalAmount" required>
+            
+            <label for="allocationPercentage">Allocation Percentage (%):</label>
+            <input type="number" id="allocationPercentage" name="allocationPercentage" min="1" max="100" required>
+            
+            <button onclick="calculateTime()">Calculate Forecast</button>
+            
+            <div class="result">
+                <h2>Forecasted Time to Achieve Goal:</h2>
+                <p id="forecastResult">-</p>
+            </div>
+        </div>
+        
+        <div class="save-container">
+            <h1>Set Your Savings Goals</h1>
+            			{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% set latest_message = messages[-1] %}
+        <div class="alert alert-{{ latest_message[0] }}">
+            {{ latest_message[1] }}
+        </div>
+        <script>
+            setTimeout(function() {
+                document.querySelector('.alert').style.display = 'none';
+            }, 5000);  // Adjust the timeout (in milliseconds) as needed
+        </script>
+    {% endif %}
+{% endwith %}
+            <form action="/SavingsGoals" method="post">
+                <label for="SavingsGoalItem">Savings Goal Item:</label>
+                <input type="text" id="SavingsGoalItem" name="SavingsGoalItem" placeholder="e.g. House down payment" required>
+                
+                <label for="SavingsGoalAmount">Savings Goal Amount ($):</label>
+                <input type="number" id="SavingsGoalAmount" name="SavingsGoalAmount" required>
+                
+                <button type="submit">Save Goal</button>
+            </form>
+            
+            <div class="result">
+                <h2>Saved Goal:</h2>
+                <p id="saveResult">-</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateTime() {
+            var monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+            var goalAmount = parseFloat(document.getElementById('goalAmount').value);
+            var allocationPercentage = parseFloat(document.getElementById('allocationPercentage').value);
+            
+            if (!isNaN(monthlyIncome) && !isNaN(goalAmount) && !isNaN(allocationPercentage)) {
+                var allocationAmount = monthlyIncome * (allocationPercentage / 100);
+                var monthsToGoal = Math.ceil(goalAmount / allocationAmount);
+                
+                document.getElementById('forecastResult').textContent = monthsToGoal + " months";
+            } else {
+                document.getElementById('forecastResult').textContent = "Invalid input. Please enter valid numbers.";
+            }
+        }
+    </script>
+</body>
+</html>
