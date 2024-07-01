@@ -1,15 +1,3 @@
-## Architecture Diagram
----
-<img src="static/Architecture.jpg" alt="Diagram" width="800" height="600">
-
-## ER Diagram
----
-<img src="static/ERdiagram.jpg" alt="Diagram" width="800" height="600">
-
-## Sequence Diagram
----
-<img src="static/sequenceDiagram.jpg" alt="Diagram" width="800" height="600">
-
 # High-Level Design Document for SmartSaver
 
 ## Introduction
@@ -23,13 +11,18 @@ SmartSaver is a Flask-based application designed to help users manage and foreca
 - **Functionality:** Provides an interface for users to input data (income, expenses, savings goals), view forecasts, and manage their budgets.
 - **Pages:**
   - `dashboard.html`
+    *Purpose:* Main interface displaying an overview of the user's financial status with key metrics and visualizations.
   - `home.html`
+    *Purpose:* Landing page introducing the SmartSaver app with navigation links to other sections.
   - `login.html`
+    *Purpose:* User authentication page with fields for email and password.
   - `register.html`
+    *Purpose:* New user registration page collecting name, email, and password.
   - `savinggoals.html`
+    *Purpose:* Interface for users to set and manage new savings goals.
   - `viewgoals.html`
-  - `budget.html`
-
+    *Purpose:* Displays user's existing savings goals with details and options to edit or delete.
+    
 ### Backend Server
 - **Technology:** Flask (Python)
 - **Functionality:** Handles user requests, processes data, interacts with the database, and communicates with external services for data storage and processing.
@@ -38,7 +31,9 @@ SmartSaver is a Flask-based application designed to help users manage and foreca
 - **Technology:** Snowflake
 - **Functionality:** Stores user data, including income, expenses, and savings goals. Provides query capabilities for forecasting and data retrieval.
 
-## Architecture Overview
+## Architecture Diagram
+---
+<img src="static/Architecture.jpg" alt="Diagram" width="800" height="600">
 
 The architecture consists of a client-server model with the following flow:
 
@@ -54,8 +49,9 @@ The architecture consists of a client-server model with the following flow:
    - The server interacts with the Snowflake database to store and retrieve data.
    - The database handles queries for forecasting and confirms data insertions.
 
-## Entity-Relationship Diagram (ERD)
-
+## ER Diagram
+---
+<img src="static/ERdiagram.jpg" alt="Diagram" width="800" height="600">
 
 ### Entities and Attributes
 
@@ -93,7 +89,9 @@ The architecture consists of a client-server model with the following flow:
    - `created_at` (date): Date of goal creation.
    - `forecasted_end_date` (date): Estimated date to achieve the goal.
 
-
+## Sequence Diagram
+---
+<img src="static/sequenceDiagram.jpg" alt="Diagram" width="800" height="600">
 
 ### Sequence of Actions
 
