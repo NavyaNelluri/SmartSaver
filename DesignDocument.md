@@ -11,17 +11,17 @@ SmartSaver is a Flask-based application designed to help users manage and foreca
 - **Functionality:** Provides an interface for users to input data (income, expenses, savings goals), view forecasts, and manage their budgets.
 - **Pages:**
   - `dashboard.html`
-    *Purpose:* Main interface displaying an overview of the user's financial status with key metrics and visualizations.
+    *:* Main interface displaying an overview of the user's financial status with key metrics and visualizations.
   - `home.html`
-    *Purpose:* Landing page introducing the SmartSaver app with navigation links to other sections.
+    *:* Landing page introducing the SmartSaver app with navigation links to other sections.
   - `login.html`
-    *Purpose:* User authentication page with fields for email and password.
+    *:* User authentication page with fields for email and password.
   - `register.html`
-    *Purpose:* New user registration page collecting name, email, and password.
+    *:* New user registration page collecting name, email, and password.
   - `savinggoals.html`
-    *Purpose:* Interface for users to set and manage new savings goals.
+    *:* Interface for users to set and manage new savings goals.
   - `viewgoals.html`
-    *Purpose:* Displays user's existing savings goals with details and options to edit or delete.
+    *:* Displays user's existing savings goals with details and options to edit or delete.
     
 ### Backend Server
 - **Technology:** Flask (Python)
@@ -30,6 +30,10 @@ SmartSaver is a Flask-based application designed to help users manage and foreca
 ### Database
 - **Technology:** Snowflake
 - **Functionality:** Stores user data, including income, expenses, and savings goals. Provides query capabilities for forecasting and data retrieval.
+
+## Scope of the Project
+
+The SmartSaver project aims to provide users with a robust platform for managing and forecasting their monthly budgets effectively. Users can input their income and expenses, set specific savings goals, and track their progress towards achieving them. The application supports various functionalities such as user authentication, registration, and interactive interfaces for data input and visualization. Key features include a dashboard for real-time financial status updates, comprehensive views of income and expenses, and tools to forecast the time needed to reach savings goals based on allocated percentages of disposable income. The system offers a seamless user experience across different devices and operating systems. SmartSaver empowers users to make informed financial decisions by providing clear insights into their spending patterns and savings progress, ultimately promoting better financial management and goal attainment.
 
 ## Architecture Diagram
 ---
