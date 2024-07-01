@@ -2,9 +2,10 @@
 ---
 <img src="static/Architecture.jpg" alt="Diagram" width="800" height="600">
 
-## Architecture Diagram
+## ER Diagram
+---
 <img src="static/ERdiagram.jpg" alt="Diagram" width="800" height="600">
 
-## Architecture Diagram
+## Sequence Diagram
 ---
 <img src="static/sequenceDiagram.jpg" alt="Diagram" width="800" height="600">
