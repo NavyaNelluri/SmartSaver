@@ -9,7 +9,7 @@
             background-image: url("{{ url_for('static', filename='homeimg2.png') }}");
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Ensure background stays in place */
+            background-attachment: fixed;
             padding: 0px;
             margin: 50px;
             width: 100%;
@@ -24,7 +24,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 1200px;
-            margin: 50px auto 20px auto; /* Added top margin */
+            margin: 50px auto 20px auto;
         }
         .dashboard-section {
             flex: 1;
@@ -72,7 +72,7 @@
             color: white;
             margin-bottom: 15px;
         }
-		.savings-goals-link {
+        .savings-goals-link {
             margin: 10px 0;
         }
         .savings-goals-link a {
@@ -94,21 +94,21 @@
     <div class="dashboard-container">
         <div class="dashboard-section">
             <h1>Welcome, {{ username }}</h1>
-
+            
             {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% set latest_message = messages[-1] %}
-        <div class="alert alert-{{ latest_message[0] }}">
-            {{ latest_message[1] }}
-        </div>
-        <script>
-            setTimeout(function() {
-                document.querySelector('.alert').style.display = 'none';
-            }, 5000);  // Adjust the timeout (in milliseconds) as needed
-        </script>
-    {% endif %}
-{% endwith %}
-
+                {% if messages %}
+                    {% set latest_message = messages[-1] %}
+                    <div class="alert alert-{{ latest_message[0] }}">
+                        {{ latest_message[1] }}
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            document.querySelector('.alert').style.display = 'none';
+                        }, 5000);
+                    </script>
+                {% endif %}
+            {% endwith %}
+            
             <label for="inputType">Choose input type:</label>
             <select id="inputType" onchange="toggleForms()" required>
                 <option value="" disabled selected>Select input type</option>
@@ -151,8 +151,7 @@
                     <option value="weekly">Weekly</option>
                     <option value="bi-weekly">Bi-Weekly</option>
                     <option value="monthly">Monthly</option>
-					<option value="OneTimeIncome">One Time Income</option>
-
+                    <option value="OneTimeIncome">One Time Income</option>
                 </select>
 
                 <label for="notes_income">Source of income:</label>
@@ -163,11 +162,15 @@
 
                 <button type="submit">Submit Income</button>
             </form>
-			<div class="savings-goals-link">
+
+            <div class="savings-goals-link">
                 <a href="{{ url_for('savings_goals') }}">Set Savings Goals</a>
             </div>
-			<div class="savings-goals-link">
+            <div class="savings-goals-link">
                 <a href="{{ url_for('view_goals') }}">View Savings Goals</a>
+            </div>
+            <div class="savings-goals-link">
+                <a href="{{ url_for('logout') }}">Logout</a>
             </div>
         </div>
 
