@@ -102,12 +102,3 @@ By following these steps, you can effectively manage and visualize your financia
 
 ---
 
-
-### Contact
-Contact below team members for the respective scoping of the project.
-- **Responsibilities by Team Members:**
-  - **Abhi Stephen Rokkam:** Focus on core functionalities.
-  - **Navya Chowdary Nelluri:** Define sprint deliverables.
-  - **Mounika Bireddy:** Peer review and quality assurance.
-  - **Krishna Reddy Syamala:** Evaluate deliverable complexity.
-
