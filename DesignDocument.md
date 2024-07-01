@@ -10,6 +10,91 @@
 ---
 <img src="static/sequenceDiagram.jpg" alt="Diagram" width="800" height="600">
 
+# High-Level Design Document for SmartSaver
+
+## Introduction
+
+SmartSaver is a Flask-based application designed to help users manage and forecast their monthly budgets. The system allows users to input their income and expenses, set savings goals, and forecast the time required to achieve these goals based on their disposable income.
+
+## Main Components
+
+### User Interface (UI)
+- **Technology:** HTML, CSS, JavaScript
+- **Functionality:** Provides an interface for users to input data (income, expenses, savings goals), view forecasts, and manage their budgets.
+- **Pages:**
+  - `dashboard.html`
+  - `home.html`
+  - `login.html`
+  - `register.html`
+  - `savinggoals.html`
+  - `viewgoals.html`
+  - `budget.html`
+
+### Backend Server
+- **Technology:** Flask (Python)
+- **Functionality:** Handles user requests, processes data, interacts with the database, and communicates with external services for data storage and processing.
+
+### Database
+- **Technology:** Snowflake
+- **Functionality:** Stores user data, including income, expenses, and savings goals. Provides query capabilities for forecasting and data retrieval.
+
+## Architecture Overview
+
+The architecture consists of a client-server model with the following flow:
+
+1. **User Interaction:**
+   - Users interact with the application through the UI.
+   - The UI sends requests to the server based on user actions (e.g., submitting income data).
+
+2. **Server Processing:**
+   - The server processes incoming requests, interacts with the database, and returns the results to the UI.
+   - The server also executes Python scripts for forecasting and data processing.
+
+3. **Database Interaction:**
+   - The server interacts with the Snowflake database to store and retrieve data.
+   - The database handles queries for forecasting and confirms data insertions.
+
+## Entity-Relationship Diagram (ERD)
+
+
+### Entities and Attributes
+
+1. **USER:**
+   - `id` (int, PK): Unique identifier for the user.
+   - `name` (string): User's name.
+   - `email` (string): User's email address.
+   - `password` (string): User's password.
+
+2. **INCOME:**
+   - `id` (int, PK): Unique identifier for the income entry.
+   - `user_id` (int, FK): References the user's `id`.
+   - `amount` (float): Income amount.
+   - `type` (string): Type of income.
+   - `frequency` (string): Frequency of income.
+   - `notes` (string): Additional notes.
+   - `created_at` (date): Date of entry creation.
+
+3. **EXPENSE:**
+   - `id` (int, PK): Unique identifier for the expense entry.
+   - `user_id` (int, FK): References the user's `id`.
+   - `amount` (float): Expense amount.
+   - `type` (string): Type of expense.
+   - `frequency` (string): Frequency of expense.
+   - `notes` (string): Additional notes.
+   - `created_at` (date): Date of entry creation.
+
+4. **SAVINGS_GOAL:**
+   - `id` (int, PK): Unique identifier for the savings goal.
+   - `user_id` (int, FK): References the user's `id`.
+   - `item` (string): Item for the savings goal.
+   - `goal_amount` (float): Target amount.
+   - `allocation_percentage` (float): Percentage of disposable income allocated.
+   - `monthly_income` (float): Monthly disposable income.
+   - `created_at` (date): Date of goal creation.
+   - `forecasted_end_date` (date): Estimated date to achieve the goal.
+
+
+
 ### Sequence of Actions
 
 1. *User Actions:*
