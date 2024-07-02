@@ -30,14 +30,17 @@ Before you begin, ensure you have met the following requirements:
 
 #### 1. Clone the Repository
 
-git clone 
-cd smartsaver
+git clone https://github.com/NavyaNelluri/SmartSaver.git 
+
+cd SmartSaver
 
 #### 2. Configure Snowflake
 1. Create snowflake account at https://www.snowflake.com/en/
 2. Install Snowflake connector for Python in command prompt:
   **pip install snowflake-connector-python**
-   
+3.Execute attached DDLs in snowflake UI to create required tables for the application.
+https://github.com/NavyaNelluri/SmartSaver/blob/NN_DesignDoc/static/DDLs.sql
+  
 #### 3. Replace Snowflake credentials:
 Replace your own snowflake credentials in app.py
 
@@ -101,4 +104,8 @@ By following these steps, you can effectively manage and visualize your financia
 - **Expense Graph:** Visualize expenditure trends with graphs.
 
 ---
+
+## Design Document
+https://github.com/NavyaNelluri/SmartSaver/blob/NN_DesignDoc/DesignDocument.md
+
 
