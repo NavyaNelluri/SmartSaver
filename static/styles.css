@@ -1,5 +1,10 @@
+/* Reset default margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Added box-sizing for consistency */
+}
 
-/* Global styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
@@ -8,13 +13,13 @@ body {
 }
 
 .container {
-    width: 100%;
-    margin: 0;
-   padding: 20px;
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-
+    max-width: 1200px; /* Added max-width for better layout on larger screens */
 }
 
 h1 {
@@ -41,18 +46,29 @@ form {
 label {
     display: block;
     margin-bottom: 10px;
+    color: #333; /* Consistent label color */
 }
 
 input[type="text"],
 input[type="password"],
 input[type="email"],
+input[type="number"],
 button {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 3px;
     box-sizing: border-box;
+    font-size: 1em;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus {
+    border-color: #4CAF50;
+    outline: none; /* Added focus styles for accessibility */
 }
 
 button {
@@ -60,10 +76,15 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    font-size: 1em;
 }
 
 button:hover {
     background-color: #45a049;
+}
+
+button:focus {
+    outline: 2px solid #45a049; /* Added focus styles for accessibility */
 }
 
 .error {
@@ -74,4 +95,45 @@ button:hover {
 .success {
     color: green;
     margin-top: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    form {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 5px;
+    }
+
+    form {
+        padding: 5px;
+    }
+
+    h1 {
+        font-size: 1.2em;
+    }
+
+    button {
+        padding: 8px;
+        font-size: 0.9em;
+    }
 }
