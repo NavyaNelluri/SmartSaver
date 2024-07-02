@@ -30,8 +30,9 @@ Before you begin, ensure you have met the following requirements:
 
 #### 1. Clone the Repository
 
-git clone 
-cd smartsaver
+git clone https://github.com/NavyaNelluri/SmartSaver.git 
+
+cd SmartSaver
 
 #### 2. Configure Snowflake
 1. Create snowflake account at https://www.snowflake.com/en/
