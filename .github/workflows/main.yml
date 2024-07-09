@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - MBWorkflow
+      - MB_Workflow
   pull_request:
     branches:
-      - MBWorkflow
+      - MB_Workflow
 
 jobs:
   build:
