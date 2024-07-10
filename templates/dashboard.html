@@ -68,9 +68,24 @@
         }
         .alert {
             padding: 10px;
-            background-color: #f44336;
-            color: white;
             margin-bottom: 15px;
+            border-radius: 4px;
+            color: white;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .alert-success {
+            background-color: #4CAF50; /* Green */
+        }
+        .alert-error {
+            background-color: #f44336; /* Red */
+        }
+        .alert-warning {
+            background-color: #ff9800; /* Orange */
+        }
+        .alert-info {
+            background-color: #2196F3; /* Blue */
         }
         .savings-goals-link {
             margin: 10px 0;
@@ -88,9 +103,31 @@
         .savings-goals-link a:hover {
             background-color: #0056b3;
         }
+        nav {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('savings_goals') }}">Set Savings Goals</a>
+        <a href="{{ url_for('view_income') }}">View or Edit Income</a>
+        <a href="{{ url_for('view_goals') }}">View Savings Goals</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
     <div class="dashboard-container">
         <div class="dashboard-section">
             <h1>Welcome, {{ username }}</h1>
@@ -162,16 +199,6 @@
 
                 <button type="submit">Submit Income</button>
             </form>
-
-            <div class="savings-goals-link">
-                <a href="{{ url_for('savings_goals') }}">Set Savings Goals</a>
-            </div>
-            <div class="savings-goals-link">
-                <a href="{{ url_for('view_goals') }}">View Savings Goals</a>
-            </div>
-            <div class="savings-goals-link">
-                <a href="{{ url_for('logout') }}">Logout</a>
-            </div>
         </div>
 
         <div class="dashboard-section chart-container">
