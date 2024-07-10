@@ -12,12 +12,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Download and Extract Python
+    - name: Download Python
       run: |
-        wget https://github.com/actions/python-versions/releases/download/3.10.11-4626646535/python-3.10.11-win32-x64.zip -O python.zip
-        mkdir python
+        curl -o python.zip -L https://github.com/actions/python-versions/releases/download/3.10.11-4626646535/python-3.10.11-win32-x64.zip
+
+    - name: Extract Python
+      run: |
         unzip python.zip -d python
-        export PATH=$PWD/python:$PATH
+
+    - name: Add Python to PATH
+      run: |
+        echo "::add-path::$(pwd)/python"
 
     - name: Install dependencies
       run: |
