@@ -304,7 +304,7 @@ def view_expenses():
     finally:
         cursor.close()
 
-    return render_template('ViewExpenses.html', expenses=expenses)
+    return render_template('ViewExpense.html', expenses=expenses)
 
 @app.route('/edit_expense/<int:expense_id>', methods=['GET', 'POST'])
 def edit_expense(expense_id):

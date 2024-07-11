@@ -1,271 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>User Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url("{{ url_for('static', filename='homeimg2.png') }}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            padding: 0px;
-            margin: 50px;
-            width: 100%;
-            max-width: 2000px;
-        }
-        .dashboard-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 1200px;
-            margin: 50px auto 20px auto;
-        }
-        .dashboard-section {
-            flex: 1;
-            margin-right: 20px;
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        form {
-            display: none;
-            flex-direction: column;
-        }
-        label {
-            margin-bottom: 10px;
-        }
-        select, input[type="number"], input[type="text"] {
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .chart-container {
-            flex: 1;
-            margin-top: 20px;
-            height: 400px;
-        }
-        .alert {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            color: white;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .alert-success {
-            background-color: #4CAF50; /* Green */
-        }
-        .alert-error {
-            background-color: #f44336; /* Red */
-        }
-        .alert-warning {
-            background-color: #ff9800; /* Orange */
-        }
-        .alert-info {
-            background-color: #2196F3; /* Blue */
-        }
-        .links-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .links-section a {
-            display: block;
-            text-align: center;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        .links-section a:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>View Expenses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("{{ url_for('static', filename='homeimg2.png') }}");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    table {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+      border: 1px solid #dddddd;
+      padding: 12px;
+      text-align: left;
+      transition: all 0.2s ease-in-out;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .edit-form {
+      display: none;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .edit-form input, .edit-form select {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    .edit-form button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    .edit-form button:hover {
+      background-color: #45a049;
+    }
+    .edit-button {
+      background-color: #FFA500;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    .edit-button:hover {
+      background-color: #FF8C00;
+    }
+    .alert {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      color: white;
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .alert-success {
+      background-color: #4CAF50;
+    }
+    .alert-error {
+      background-color: #f44336;
+    }
+    .alert-warning {
+      background-color: #ff9800;
+    }
+    .alert-info {
+      background-color: #2196F3;
+    }
+  </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="dashboard-section">
-            <h1>Welcome, {{ username }}</h1>
-            
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% set latest_message = messages[-1] %}
-                    <div class="alert alert-{{ latest_message[0] }}">
-                        {{ latest_message[1] }}
-                    </div>
-                    <script>
-                        setTimeout(function() {
-                            document.querySelector('.alert').style.display = 'none';
-                        }, 5000);
-                    </script>
-                {% endif %}
-            {% endwith %}
-            
-            <label for="inputType">Choose input type:</label>
-            <select id="inputType" onchange="toggleForms()" required>
-                <option value="" disabled selected>Select input type</option>
-                <option value="expense">Expense</option>
-                <option value="income">Income</option>
+  <h1>View Expenses</h1>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% set latest_message = messages[-1] %}
+      <div class="alert alert-{{ latest_message[0] }}">
+        {{ latest_message[1] }}
+      </div>
+      <script>
+        setTimeout(function() {
+          document.querySelector('.alert').style.display = 'none';
+        }, 5000);
+      </script>
+    {% endif %}
+  {% endwith %}
+  <table>
+    <thead>
+      <tr>
+        <th>Expense Type</th>
+        <th>Frequency</th>
+        <th>Amount</th>
+        <th>Notes</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for expense in expenses %}
+      <tr>
+        <td>{{ expense[0] }}</td>
+        <td>{{ expense[1] }}</td>
+        <td>{{ expense[2] }}</td>
+        <td>{{ expense[3] }}</td>
+        <td>
+          <button class="edit-button" onclick="toggleEditForm('{{ expense[4] }}')">Edit</button>
+        </td>
+      </tr>
+      <tr class="edit-form" id="editForm{{ expense[4] }}">
+        <td colspan="5">
+          <form method="POST" action="{{ url_for('edit_expense', expense_id=expense[4]) }}">
+            <input type="hidden" name="expense_id" value="{{ expense[4] }}">
+            <label for="frequency">Frequency:</label>
+            <select name="frequency" id="frequency">
+              <option value="weekly" {% if expense[1] == 'weekly' %}selected{% endif %}>Weekly</option>
+              <option value="bi-weekly" {% if expense[1] == 'bi-weekly' %}selected{% endif %}>Bi-Weekly</option>
+              <option value="monthly" {% if expense[1] == 'monthly' %}selected{% endif %}>Monthly</option>
+              <option value="OneTimeExpense" {% if expense[1] == 'OneTimeExpense' %}selected{% endif %}>One Time Expense</option>
             </select>
+            <label for="expense_type">Expense Type:</label>
+            <select name="expense_type" id="expense_type">
+              <option value="Groceries" {% if expense[0] == 'Groceries' %}selected{% endif %}>Groceries</option>
+              <option value="Vehicle Maintenance" {% if expense[0] == 'Vehicle Maintenance' %}selected{% endif %}>Vehicle Maintenance</option>
+              <option value="Housing" {% if expense[0] == 'Housing' %}selected{% endif %}>Housing</option>
+              <option value="Utilities" {% if expense[0] == 'Utilities' %}selected{% endif %}>Utilities</option>
+              <option value="other" {% if expense[0] == 'other' %}selected{% endif %}>Other</option>
+            </select>
+            <label for="notes">Notes:</label>
+            <input type="text" id="notes" name="Notes" value="{{ expense[3] }}" required>
+            <label for="dollars">Amount:</label>
+            <input type="number" id="dollars" name="dollars" value="{{ expense[2] }}" required>
+            <button type="submit">Save</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-            <form id="expenseForm" method="POST" action="{{ url_for('dashboard') }}">
-                <input type="hidden" name="form_type" value="expense">
-                <label for="frequency_expense">Specify the frequency of expenses:</label>
-                <select name="frequency" id="frequency_expense" required>
-                    <option value="weekly">Weekly</option>
-                    <option value="bi-weekly">Bi-Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="OneTimeExpense">One Time Expense</option>
-                </select>
-
-                <label for="expense_type">Select the type of expense:</label>
-                <select name="expense_type" id="expense_type" required>
-                    <option value="Groceries">Groceries</option>
-                    <option value="Vehicle Maintenance">Vehicle Maintenance</option>
-                    <option value="Housing">Housing</option>
-                    <option value="Utilities">Utilities</option>
-                    <option value="other">Other</option>
-                </select>
-
-                <label for="notes_expense">Spent on:</label>
-                <input type="text" id="notes_expense" name="Notes" required>
-
-                <label for="dollars_expense">Enter the dollar amount:</label>
-                <input type="number" id="dollars_expense" name="dollars" required>
-
-                <button type="submit">Submit Expense</button>
-            </form>
-
-            <form id="incomeForm" method="POST" action="{{ url_for('dashboard') }}">
-                <input type="hidden" name="form_type" value="income">
-                <label for="frequency_income">Specify the frequency of income:</label>
-                <select name="frequency" id="frequency_income" required>
-                    <option value="weekly">Weekly</option>
-                    <option value="bi-weekly">Bi-Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="OneTimeIncome">One Time Income</option>
-                </select>
-
-                <label for="notes_income">Source of income:</label>
-                <input type="text" id="notes_income" name="Notes" required>
-
-                <label for="dollars_income">Enter the dollar amount:</label>
-                <input type="number" id="dollars_income" name="dollars" required>
-
-                <button type="submit">Submit Income</button>
-            </form>
-
-            <div class="links-section">
-                <a href="{{ url_for('savings_goals') }}">Set Savings Goals</a>
-                <a href="{{ url_for('view_income') }}">View or Edit Income</a>
-                <a href="{{ url_for('view_expenses') }}">View or Edit Expenses</a>
-                <a href="{{ url_for('view_goals') }}">View Savings Goals</a>
-                <a href="{{ url_for('logout') }}">Logout</a>
-            </div>
-        </div>
-
-        <div class="dashboard-section chart-container">
-            <canvas id="myChart"></canvas>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // JavaScript to toggle forms based on input type selection
-        function toggleForms() {
-            var inputType = document.getElementById('inputType').value;
-            var expenseForm = document.getElementById('expenseForm');
-            var incomeForm = document.getElementById('incomeForm');
-
-            expenseForm.style.display = 'none';
-            incomeForm.style.display = 'none';
-
-            if (inputType === 'expense') {
-                expenseForm.style.display = 'flex';
-            } else if (inputType === 'income') {
-                incomeForm.style.display = 'flex';
-            }
-        }
-
-        // JavaScript for Chart.js
-        document.addEventListener('DOMContentLoaded', function () {
-            var ctx = document.getElementById('myChart').getContext('2d');
-
-            var myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Amount',
-                        data: [],
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 50
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Function to update chart data based on selection
-            function updateChart(labels, data) {
-                myChart.data.labels = labels;
-                myChart.data.datasets[0].data = data;
-                myChart.update();
-            }
-
-            // Fetch initial data from Flask template (replace with actual dynamic data)
-            var expense_labels = {{ expense_labels | tojson }};
-            var expense_data = {{ expense_data | tojson }};
-            var income_labels = {{ income_labels | tojson }};
-            var income_data = {{ income_data | tojson }};
-
-            updateChart(expense_labels, expense_data); // Initial data
-
-            // Event listener for input type change
-            document.getElementById('inputType').addEventListener('change', function () {
-                var inputType = this.value;
-
-                if (inputType === 'expense') {
-                    updateChart(expense_labels, expense_data);
-                } else if (inputType === 'income') {
-                    updateChart(income_labels, income_data);
-                }
-            });
-        });
-    </script>
+  <script>
+    function toggleEditForm(expenseId) {
+      var editForm = document.getElementById('editForm' + expenseId);
+      if (editForm.style.display === "none" || editForm.style.display === "") {
+        editForm.style.display = "table-row";
+      } else {
+        editForm.style.display = "none";
+      }
+    }
+  </script>
 </body>
 </html>
