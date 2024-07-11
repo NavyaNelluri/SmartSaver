@@ -285,6 +285,55 @@ def edit_income(income_id):
             cursor.close()
 
     return redirect(url_for('view_income'))
+@app.route('/view_expenses')
+def view_expenses():
+    if 'username' not in session:
+        flash('Please log in to view expenses.', 'error')
+        return redirect(url_for('home'))
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+        username = session['username']
+        cursor.execute("SELECT expense_type, frequency, amount, notes, id FROM expense_tracker WHERE username = %s", (username,))
+        expenses = cursor.fetchall()
+    except Exception as e:
+        flash(f'Error fetching expense data: {str(e)}', 'error')
+        expenses = []
+    finally:
+        cursor.close()
+
+    return render_template('ViewExpenses.html', expenses=expenses)
+
+@app.route('/edit_expense/<int:expense_id>', methods=['GET', 'POST'])
+def edit_expense(expense_id):
+    if 'username' not in session:
+        flash('Please log in to edit expenses.', 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        conn = get_db()
+        cursor = conn.cursor()
+
+        try:
+            frequency = request.form.get('frequency')
+            notes = request.form.get('Notes')
+            dollars = request.form.get('dollars')
+            expense_type = request.form.get('expense_type')
+
+            cursor.execute("UPDATE expense_tracker SET frequency = %s, notes = %s, amount = %s, expense_type = %s WHERE id = %s",
+                           (frequency, notes, dollars, expense_type, expense_id))
+            conn.commit()
+
+            flash('Expense updated successfully!', 'success')
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error updating expense: {str(e)}', 'error')
+        finally:
+            cursor.close()
+
+    return redirect(url_for('view_expenses'))
 @app.route('/logout')
 def logout():
     session.pop('username', None)
