@@ -202,7 +202,7 @@ def view_goals():
     today = datetime.datetime.now()
 
     try:
-        cursor.execute("SELECT username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome, created_at FROM SAVINGS_GOAL_TRACKER")
+        cursor.execute("SELECT username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome, created_at FROM SAVINGS_GOAL_TRACKER where USERNAME=%s", (username))
         goals = cursor.fetchall()
         for goal in goals:
             created_at = goal[5]  # Assuming created_at is the 6th element in each goal tuple
@@ -237,8 +237,103 @@ def view_goals():
 
     # Make sure there's a return statement for every code path
     return render_template('ViewGoals.html', username=username, goals=goals_with_months_left)
+@app.route('/view_income')
+def view_income():
+    if 'username' not in session:
+        flash('Please log in to view income.', 'error')
+        return redirect(url_for('home'))
 
+    conn = get_db()
+    cursor = conn.cursor()
 
+    try:
+        username = session['username']
+        cursor.execute("SELECT income_source, frequency, amount, id FROM income_tracker WHERE username = %s", (username,))
+        incomes = cursor.fetchall()
+    except Exception as e:
+        flash(f'Error fetching income data: {str(e)}', 'error')
+        incomes = []
+
+    finally:
+        cursor.close()
+
+    return render_template('ViewIncome.html', incomes=incomes)
+@app.route('/edit_income/<int:income_id>', methods=['GET', 'POST'])
+def edit_income(income_id):
+    if 'username' not in session:
+        flash('Please log in to edit income.', 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        conn = get_db()
+        cursor = conn.cursor()
+
+        try:
+            frequency = request.form.get('frequency')
+            notes = request.form.get('Notes')
+            dollars = request.form.get('dollars')
+
+            cursor.execute("UPDATE income_tracker SET frequency = %s, income_source = %s, amount = %s WHERE id = %s",
+                           (frequency, notes, dollars, income_id))
+            conn.commit()
+
+            flash('Income updated successfully!', 'success')
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error updating income: {str(e)}', 'error')
+        finally:
+            cursor.close()
+
+    return redirect(url_for('view_income'))
+@app.route('/view_expenses')
+def view_expenses():
+    if 'username' not in session:
+        flash('Please log in to view expenses.', 'error')
+        return redirect(url_for('home'))
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+        username = session['username']
+        cursor.execute("SELECT expense_type, frequency, amount, notes, id FROM expense_tracker WHERE username = %s", (username,))
+        expenses = cursor.fetchall()
+    except Exception as e:
+        flash(f'Error fetching expense data: {str(e)}', 'error')
+        expenses = []
+    finally:
+        cursor.close()
+
+    return render_template('ViewExpense.html', expenses=expenses)
+
+@app.route('/edit_expense/<int:expense_id>', methods=['GET', 'POST'])
+def edit_expense(expense_id):
+    if 'username' not in session:
+        flash('Please log in to edit expenses.', 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        conn = get_db()
+        cursor = conn.cursor()
+
+        try:
+            frequency = request.form.get('frequency')
+            notes = request.form.get('Notes')
+            dollars = request.form.get('dollars')
+            expense_type = request.form.get('expense_type')
+
+            cursor.execute("UPDATE expense_tracker SET frequency = %s, notes = %s, amount = %s, expense_type = %s WHERE id = %s",
+                           (frequency, notes, dollars, expense_type, expense_id))
+            conn.commit()
+
+            flash('Expense updated successfully!', 'success')
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error updating expense: {str(e)}', 'error')
+        finally:
+            cursor.close()
+
+    return redirect(url_for('view_expenses'))
 @app.route('/logout')
 def logout():
     session.pop('username', None)
