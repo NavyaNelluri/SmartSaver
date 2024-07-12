@@ -1,12 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_mail import Mail, Message
+from dotenv import load_dotenv
+import os
 import snowflake.connector as snowflake
 import datetime
 from datetime import timedelta
 
-
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your secret key
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # Replace with your email address
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # Replace with your email password
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')  # Replace with your email address
+
+mail = Mail(app)
 
 # Snowflake database connection parameters
 snowflake_account = 'ywonoeq-up08793'
@@ -114,6 +127,12 @@ def dashboard():
         amount = float(request.form['dollars'])
 
         try:
+            # Fetch user's first name and email
+            cursor.execute("SELECT FirstName, Email FROM USERS WHERE UserName = %s", (username,))
+            user_info = cursor.fetchone()
+            first_name = user_info[0]
+            email = user_info[1]
+
             if form_type == 'expense':
                 expense_type = request.form['expense_type']
                 cursor.execute("""
@@ -131,6 +150,14 @@ def dashboard():
                 """, (username, frequency, amount, income_source))
                 conn.commit()
                 flash('Income added successfully', 'success')
+
+                # Prepare and send email notification for income
+                subject = "Income Added Notification"
+                body = f"Hello {first_name},\n\nYou have successfully added a new income entry.\n\nDetails:\nIncome Source: {income_source}\nAmount: ${amount}\nFrequency: {frequency}\n\nBest regards,\nSmartSaver Team"
+
+                msg = Message(subject, recipients=[email])
+                msg.body = body
+                mail.send(msg)
 
         except Exception as e:
             flash(f'Error adding entry: {str(e)}', 'error')
@@ -165,6 +192,7 @@ def dashboard():
         cursor.close()
 
     return render_template('dashboard.html', username=session['username'], expense_labels=expense_labels, expense_data=expense_data, income_labels=income_labels, income_data=income_data)
+
 @app.route('/SavingsGoals', methods=['GET', 'POST'])
 def savings_goals():
     if 'username' not in session:
