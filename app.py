@@ -1,13 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_mail import Mail, Message
+from dotenv import load_dotenv
+import os
 import snowflake.connector as snowflake
 import datetime
 from datetime import timedelta
 
-
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your secret key
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # Replace with your email address
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # Replace with your email password
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')  # Replace with your email address
+
+mail = Mail(app)
 # Snowflake database connection parameters
 snowflake_account = 'ywonoeq-up08793'
 snowflake_user = 'SMARTSAVER'
@@ -170,21 +182,39 @@ def savings_goals():
     if 'username' not in session:
         flash('Please log in to access the savings goals page.', 'error')
         return redirect(url_for('home'))
+
     if request.method == 'POST':
-        username = session['username']  # Assuming you have 'username' in session
+        username = session['username']
         SavingsGoalItem = request.form['SavingsGoalItem']
         SavingsGoalAmount = float(request.form['SavingsGoalAmount'])
         MonthlyDisposableIncome = request.form['MonthlyIncome']
         AllocationPercentage = request.form['AllocationPercentage']
+
         try:
             conn = get_db()
             cursor = conn.cursor()
+
+            # Fetch user's first name
+            cursor.execute("SELECT FirstName, Email FROM USERS WHERE UserName = %s", (username,))
+            user_info = cursor.fetchone()
+            first_name = user_info[0]
+            email = user_info[1]
+
             cursor.execute("""
                 INSERT INTO SAVINGS_GOAL_TRACKER (username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome, created_at)
                 VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP())
             """, (username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome))
             conn.commit()
-            flash('Goal saved successfully', 'success')
+
+            # Prepare and send email notification
+            subject = "Savings Goal Added Notification"
+            body = f"Hello {first_name},\n\nYou have successfully added a new savings goal.\n\nDetails:\nSavings Goal Item: {SavingsGoalItem}\nSavings Goal Amount: ${SavingsGoalAmount}\nAllocation Percentage: {AllocationPercentage}%\nMonthly Disposable Income: ${MonthlyDisposableIncome}\n\nBest regards,\nSmartSaver Team"
+
+            msg = Message(subject, recipients=[email])
+            msg.body = body
+            mail.send(msg)
+
+            flash('Goal saved successfully and email notification sent', 'success')
             cursor.close()
         except Exception as e:
             flash(f'Error saving goal: {str(e)}', 'error')
@@ -192,6 +222,7 @@ def savings_goals():
             conn.close()
 
     return render_template('SavingsGoals.html', username=session['username'])
+
 @app.route('/ViewGoals',  methods=['GET', 'POST'])
 def view_goals():
     username = session.get('username', 'Guest')  # Default to 'Guest' if not found
