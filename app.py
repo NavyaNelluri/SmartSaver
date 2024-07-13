@@ -192,6 +192,7 @@ def savings_goals():
             conn.close()
 
     return render_template('SavingsGoals.html', username=session['username'])
+
 @app.route('/ViewGoals',  methods=['GET', 'POST'])
 def view_goals():
     username = session.get('username', 'Guest')  # Default to 'Guest' if not found
@@ -339,6 +340,44 @@ def logout():
     session.pop('username', None)
     flash('You have been logged out', 'success')
     return redirect(url_for('home'))
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+
+        # Validate passwords
+        if new_password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return render_template('forgot_password.html')
+
+        # Check if the username and email match in the database
+        conn = get_db()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT * FROM USERS WHERE username = %s AND email = %s", (username, email))
+            user = cursor.fetchone()
+
+            if user:
+                # Update the user's password
+                cursor.execute("UPDATE USERS SET Password = %s WHERE username = %s AND email = %s", (new_password, username, email))
+                conn.commit()
+                flash('Password has been reset successfully.', 'success')
+                return redirect(url_for('home'))
+            else:
+                flash('Username and email do not match.', 'error')
+
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'error')
+        finally:
+            cursor.close()
+            conn.close()
+
+    return render_template('forgot_password.html')
+
 
 
 if __name__ == '__main__':
