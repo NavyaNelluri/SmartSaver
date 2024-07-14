@@ -235,6 +235,24 @@
             color: #555;
         }
         
+        .forgot-password-link {
+            margin-top: 10px; /* Space above the link */
+            font-size: 14px; /* Font size for the link */
+            color: #333; /* Color for the link */
+            text-align: center; /* Center align the link */
+        }
+
+    .forgot-password-link a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+    .forgot-password-link a:hover {
+        color: #555; /* Darker color on hover */
+     }
+
     </style>
 </head>
 <body>
@@ -271,6 +289,7 @@
         <input type="password" id="password" name="password" required><br><br>
         
         <button type="submit">Login</button>
+        <p class="forgot-password-link"><a href="{{ url_for('forgot_password') }}">Forgot Password?</a></p> <!-- Added line -->
     </form>
 	</div>
 	<div class="register-link">
