@@ -5,6 +5,8 @@ import os
 import snowflake.connector as snowflake
 import datetime
 import timedelta
+from datetime import datetime, timedelta
+
 
 load_dotenv()
 
@@ -22,9 +24,9 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')  # Replace with y
 mail = Mail(app)
 
 # Snowflake database connection parameters
-snowflake_account = 'ywonoeq-up08793'
-snowflake_user = 'SMARTSAVER'
-snowflake_password = 'SmartSaver_pswd1'
+snowflake_account = 'zthubab-uq03646'
+snowflake_user = 'SmartSaver'
+snowflake_password = 'SmartSaverpswd01'
 snowflake_database = 'SMARTSAVER'
 snowflake_schema = 'SCH_SMARTSAVER'
 snowflake_warehouse = 'COMPUTE_WH'
@@ -234,17 +236,18 @@ def savings_goals():
 
     return render_template('SavingsGoals.html', username=session['username'])
 
-@app.route('/ViewGoals',  methods=['GET', 'POST'])
+
+@app.route('/ViewGoals', methods=['GET', 'POST'])
 def view_goals():
-    username = session.get('username', 'Guest')  # Default to 'Guest' if not found
+    username = session['username']
 
     conn = get_db()
     cursor = conn.cursor()
     goals_with_months_left = []
-    today = datetime.datetime.now()
+    today = datetime.now()
 
     try:
-        cursor.execute("SELECT username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome, created_at FROM SAVINGS_GOAL_TRACKER where USERNAME=%s", (username))
+        cursor.execute("SELECT username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome, created_at FROM SAVINGS_GOAL_TRACKER WHERE username=%s", (username,))
         goals = cursor.fetchall()
         for goal in goals:
             created_at = goal[5]  # Assuming created_at is the 6th element in each goal tuple
@@ -254,18 +257,20 @@ def view_goals():
 
             # Calculate monthly allocation amount
             monthly_allocation = monthly_income * (allocation_percentage / 100)
-            
+
             # Calculate number of months required to reach the savings goal
             months_to_goal = savings_goal_amount / monthly_allocation
-            
+
             # Calculate the target date to achieve the goal
-            target_date = created_at + timedelta(days=float(months_to_goal) * 30)
-            
+            target_date = created_at + timedelta(days=months_to_goal * 30)
+
             # Calculate months left from today to the target date
             months_left = (target_date.year - today.year) * 12 + target_date.month - today.month
-            
+            if target_date.day < today.day:
+                months_left -= 1
+
             goals_with_months_left.append((*goal, months_left))
-        
+
         return render_template('ViewGoals.html', username=username, goals=goals_with_months_left)
 
     except Exception as e:
@@ -276,9 +281,6 @@ def view_goals():
     finally:
         cursor.close()
         conn.close()
-
-    # Make sure there's a return statement for every code path
-    return render_template('ViewGoals.html', username=username, goals=goals_with_months_left)
 
 @app.route('/view_income')
 def view_income():
