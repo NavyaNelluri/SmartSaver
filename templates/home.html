@@ -3,298 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <style>
-        /* Reset default margin and padding for all elements */
-        * {
-            margin: 0;
-            padding: 0;
-        }
+	<style>
+	/* Reset default margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: Arial, sans-serif; /* Choose a readable font */
-            background-color: #f0f0f0; /* Light background color */
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    overflow: hidden; 
+}
 
-        .container {
-            text-align: center; /* Center align content within the container */
-            padding: 20px; /* Add padding for spacing */
-        }
 
-        .home-content1 {
-            display: flex;
-            flex-direction: column; /* Stack elements vertically */
-            align-items: center;
-            justify-content: center;
-            background-color: #fff; /* White background for content */
-            padding: 20px; /* Padding inside the content area */
-            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Shadow for a subtle lift */
-            max-width: 2000px; /* Limit width to prevent stretching */
-            margin: auto; /* Center the content horizontally */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition on hover */
-            position: relative; /* For absolute positioning of links */
-        }
+.container {
+    position: relative;
+    text-align: center;
+    padding: 20px;
+    z-index: 2; /* Ensure content is above the video */
+}
+.slide-in {
+    position: relative;
+    text-align: center;
+	color : green;
+	    z-index: 2; /* Ensure content is above the video */
 
-        .home-content1:hover {
-            transform: translateY(-5px); /* Move up slightly on hover */
-            box-shadow: 0 10px 10px rgba(0,0,0,0.2); /* Larger shadow on hover */
-        }
+	}
+	
+.home-content1 {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
 
-        .home-content1 img {
-            width: 100%; /* Image width fills its container */
-            max-width: 2000px; /* Limit maximum width */
-            height: auto; /* Maintain aspect ratio */
-            border-radius: 8px; /* Rounded corners for the image */
-            margin-bottom: 20px; /* Margin below the image */
-            transition: transform 0.3s ease; /* Smooth scale transition on hover */
+.home-content1 p {
+    text-align: justify;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
 
-        }
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
 
-        .home-content1 p {
-            text-align: justify; /* Justify-align paragraph text */
-            line-height: 1.6; /* Increased line height for readability */
-            margin-bottom: 20px; /* Margin below the paragraph */
+.heading1, .heading2, .heading3 {
+    position: absolute;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    animation: slide-in 2s ease-out forwards;
+}
 
-        }
+.heading1 {
+    top: 150px;
+    left: 250px;
+}
 
-        .home-links {
-            position: absolute;
-            top: 30px; /* Adjust as needed */
-            right: 20px; /* Adjust as needed */
-            text-align: right; /* Right align the links */
-        }
+.heading2 {
+    top: 350px;
+    left: 250px;
+}
 
-        .home-links a {
-            display: inline-block; /* Display links in a row */
-            text-decoration: none; /* Remove underline */
-            color: #333; /* Dark text color */
-            background-color: #f0f0f0; /* Light background color */
-            padding: 10px 30px; /* Padding for clickable area */
-            border-radius: 5px; /* Rounded corners for buttons */
-            margin: 0 30px; /* Margin between buttons */
-            font-weight: bold;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition on hover */
-            display: inline-block; /* Ensures the element can be transformed */
-			}
+.heading3 {
+    top: 550px;
+    left: 270px;
+}
 
-        .register-link a:hover {
-            color: #000; /* Darken text color on hover */
-            transform: translateY(-2px); /* Move link up slightly on hover */
-			            display: inline-block; /* Ensures the element can be transformed */
+.login-box {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    padding: 40px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    z-index: 2;
+}
 
-        }
+.login-box h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
 
-        h1 {
-            font-size: 36px; /* Larger font size */
-            font-weight: bold; /* Bold font weight */
-            color: #333; /* Dark text color */
-            margin-bottom: 20px; /* Margin below the heading */
-            position: relative; /* Position relative for pseudo-element */
-            transition: color 0.3s ease; /* Smooth color transition on hover */
-        }
+.login-box form {
+    text-align: left;
+}
 
-        h1::before {
-            content: ""; 
-            position: absolute; 
-            bottom: -3px; 
-            left: 0; 
-            width: 100%; 
-            height: 3px; 
-            background-color: purple; /* Orange color */
-            transform: scaleX(0); /* Initial scale transformation */
-            transition: transform 0.3s ease; /* Smooth scale transition */
-        }
+.login-box label {
+    display: block;
+    margin-bottom: 8px;
+}
 
-        h1:hover::before {
-            transform: scaleX(1); /* Scale up pseudo-element on hover */
-        }
+.login-box input[type="text"],
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
-        .slide-in {
-            position: relative;
-            animation: slide-in 2s ease-out forwards;
-        }
+.login-box button {
+    background-color: #e65c00;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
 
-        @keyframes slide-in {
-            0% {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            100% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+.login-box button:hover {
+    background-color: #e65c00;
+	transform: scale(1.05);
 
-        .heading1 {
-            position: absolute;
-            top: 150px; /* Adjust as needed */
-            left: 250px; /* Adjust as needed */
-            color: #555; /* Darker text color */
-            font-size: 24px;
-            font-weight: bold;
-            animation: slide-in 2s ease-out forwards;
-        }
-		.heading1 p:hover {
-            color: #000; /* Darken text color on hover */
-            transform: translateY(-2px); /* Move link up slightly on hover */
-			            display: inline-block; /* Ensures the element can be transformed */
+}
 
-        }
-		.heading2 {
-            position: absolute;
-            top: 350px; /* Adjust as needed */
-            left: 250px; /* Adjust as needed */
-            color: #555; /* Darker text color */
-            font-size: 24px;
-            font-weight: bold;
-            animation: slide-in 2s ease-out forwards;
-        }
-		.heading2 p:hover {
-            color: #000; /* Darken text color on hover */
-            transform: translateY(-2px); /* Move link up slightly on hover */
-			            display: inline-block; /* Ensures the element can be transformed */
+.register-box {    
+	color: white;
 
-        }
-		.heading3 {
-            position: absolute;
-            top: 550px; /* Adjust as needed */
-            left: 270px; /* Adjust as needed */
-            color: #555; /* Darker text color */
-            font-size: 24px;
-            font-weight: bold;
-            animation: slide-in 2s ease-out forwards;
-        }
-		.heading3 p:hover {
-            color: #000; /* Darken text color on hover */
-            transform: translateY(-2px); /* Move link up slightly on hover */
-			            display: inline-block; /* Ensures the element can be transformed */
 
-        }
-		.login-box {
-            position: absolute;
-            top: 100px; /* Adjust as needed */
-            right: 100px; /* Adjust as needed */
-            padding: 40px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-			z-index: 1; /* Ensure image is below overlay */
-        }
+    position: absolute;
+    top: 450%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    padding: 40px;
+    text-align: center;
+    z-index: 2;
+}
 
-        .login-box h2 {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
+.register-box h2 {
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
 
-        .login-box form {
-            text-align: left;
-        }
+.register-box .register-button {
+    display: inline-block;
+    background-color: #ff6600;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
-        .login-box label {
-            display: block;
-            margin-bottom: 8px;
-        }
+.register-box .register-button:hover {
+    background-color: #e65c00;
+    transform: scale(1.05);
+}
 
-        .login-box input[type="text"],
-        .login-box input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+.forgot-password-link {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
 
-        .login-box button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+.forgot-password-link a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
 
-        .login-box button:hover {
-            background-color: #45a049;
-        }
-		.register-link {
-            position: absolute;
-            top: 450px; /* Adjust as needed */
-            right: 140px; /* Adjust as needed */
-            font-size: 16px;
-            color: #333;
-        }
+.forgot-password-link a:hover {
+    color: #555;
+}
 
-        .register-link a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
+@keyframes slide-in {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 
-        .register-link a:hover {
-            color: #555;
-        }
-        
-        .forgot-password-link {
-            margin-top: 10px; /* Space above the link */
-            font-size: 14px; /* Font size for the link */
-            color: #333; /* Color for the link */
-            text-align: center; /* Center align the link */
-        }
 
-    .forgot-password-link a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-    .forgot-password-link a:hover {
-        color: #555; /* Darker color on hover */
-     }
-
-    </style>
+</style>
 </head>
 <body>
     <div class="container">
         <h1 class="slide-in">Manage Your Finances with SmartSaver</h1>
         <div class="home-content1">
-            
             <div class="heading1">
-                <p>Accurate Results</p>
+                <p>Forecast</p>
             </div>
-			<div class="heading2">
-                <p>Smart Living</p>
+            <div class="heading2">
+                <p>Plan Wise</p>
             </div>
-			<div class="heading3">
-                <p>User Friendly</p>
+            <div class="heading3">
+                <p>Get it</p>
             </div>
-            <img src="{{ url_for('static', filename='homeimg1.png') }}" alt="SmartSaver Logo">
+            <video autoplay muted loop id="bg-video">
+                <source src="{{ url_for('static', filename='bgvideo.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
-		<div class="login-box">
-
-    <h2>Login</h2>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <form action="{{ url_for('home') }}" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
+        <div class="login-box">
+            <h2>Login</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form action="{{ url_for('home') }}" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required><br><br>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br><br>
+                
+                <button type="submit">Login</button>
+                <p class="forgot-password-link"><a href="{{ url_for('forgot_password') }}">Forgot Password?</a></p>
+            
+			</form>
+        </div>
+		 <div class="register-box" color = "white">
+            <h2>Manage Your Finances with SmartSaver</h2>
+            <a href="{{ url_for('register') }}" class="register-button">Sign Up</a>
+        </div>
         
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <button type="submit">Login</button>
-        <p class="forgot-password-link"><a href="{{ url_for('forgot_password') }}">Forgot Password?</a></p> <!-- Added line -->
-    </form>
-	</div>
-	<div class="register-link">
-                    Don't have an account?<br> <a href="{{ url_for('register') }}">Register here</br></a>
-    </div>
     </div>
 </body>
 </html>
