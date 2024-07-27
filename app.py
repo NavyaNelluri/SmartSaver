@@ -77,6 +77,62 @@ def register():
             cursor.close()
 
     return render_template('register.html')
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    user = session['username']
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # Default masked password
+    masked_password = None
+
+    try:
+        # Fetch current user information
+        cursor.execute("SELECT FirstName, LastName, UserName, Email, Password FROM USERS WHERE UserName = %s", (user,))
+        user_data = cursor.fetchone()
+        
+        if request.method == 'POST':
+            firstname = request.form['firstname']
+            lastname = request.form['lastname']
+            username = request.form['username']
+            email = request.form['email']
+            current_password = request.form['current_password']
+            new_password = request.form['new_password']
+            confirm_password = request.form['confirm_password']
+
+            # Validate current password
+            cursor.execute("SELECT Password FROM USERS WHERE UserName = %s", (user,))
+            stored_password = cursor.fetchone()[0]
+
+            if stored_password != current_password:
+                flash('Current password is incorrect.', 'error')
+            elif new_password != confirm_password:
+                flash('New passwords do not match.', 'error')
+            else:
+                # Update user information
+                cursor.execute("UPDATE USERS SET FirstName = %s, LastName = %s, UserName = %s, Email = %s, Password = %s WHERE UserName = %s and Password = %s",
+                               (firstname, lastname, username, email, new_password, user, current_password))
+                conn.commit()
+                flash('Profile updated successfully!', 'success')
+                
+                # Update the current_user attributes to reflect changes
+                user = username  # Update session username
+                session['username'] = username
+
+        # Mask the password (show only the last 3 characters)
+        if user_data:
+            masked_password = '***' + user_data[4][-3:]
+        else:
+            masked_password = '***'  # Default masked password if user data is not found
+
+    except Exception as e:
+        flash(f'Error updating profile: {str(e)}', 'error')
+
+    finally:
+        cursor.close()
+
+    return render_template('settings.html', user=user_data, masked_password=masked_password)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
