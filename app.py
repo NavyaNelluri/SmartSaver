@@ -531,31 +531,32 @@ def delete_goal():
     if 'username' not in session:
         flash('Please log in to delete goals.', 'error')
         return redirect(url_for('home'))
-
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    
     try:
         username = session['username']
-        created_at = request.form['created_at']
-        print(f"Received delete request for user {username} with created_at {created_at}")
-
+        created_at = request.form.get('created_at')
+        
+        if created_at is None:
+            flash('Error: Missing created_at in form data.', 'error')
+            return redirect(url_for('view_goals'))
+        
         # Convert created_at to datetime object
-        created_at_datetime = datetime.fromisoformat(created_at)
-        print(f"Parsed datetime: {created_at_datetime}")
-    goal_id = request.form['goal_id']
-
-    try:
-        conn = get_db()
-        cursor = conn.cursor()
-
+        try:
+            created_at_datetime = datetime.fromisoformat(created_at)
+        except ValueError:
+            flash('Error: Invalid date format.', 'error')
+            return redirect(url_for('view_goals'))
+        
         # Delete the savings goal from the database
         cursor.execute("DELETE FROM SAVINGS_GOAL_TRACKER WHERE username = %s AND created_at = %s", (username, created_at_datetime))
         conn.commit()
         
         flash('Savings goal deleted successfully.', 'success')
-    except KeyError as e:
-        print(f"Missing key in request.form: {str(e)}")
-        flash('Error: Missing key in form data.', 'error')
     except Exception as e:
-        print(f"Error deleting savings goal: {str(e)}")
+        logging.error(f"Error deleting savings goal: {str(e)}")
         flash(f'Error deleting savings goal: {str(e)}', 'error')
     finally:
         cursor.close()
