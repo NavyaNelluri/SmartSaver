@@ -218,6 +218,13 @@ def dashboard():
                 """, (username, frequency, amount, income_source))
                 conn.commit()
                 flash('Income added successfully', 'success')
+                # Prepare and send email notification for income
+                subject = "Income Added Notification"
+                body = f"Hello {first_name},\n\nYou have successfully added a new income entry.\n\nDetails:\nIncome Source: {income_source}\nAmount: ${amount}\nFrequency: {frequency}\n\nBest regards,\nSmartSaver Team"
+
+                msg = Message(subject, recipients=[email])
+                msg.body = body
+                mail.send(msg)
 
         except Exception as e:
             flash(f'Error adding entry: {str(e)}', 'error')
