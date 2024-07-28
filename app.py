@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import snowflake.connector as snowflake
 import datetime
-import timedelta
+
 from datetime import datetime, timedelta
 
 
@@ -62,13 +62,20 @@ def register():
             if existing_user:
                 flash('Username already exists. Please choose another one.', 'error')
             else:
-                # Insert new user
-                cursor.execute("INSERT INTO USERS (FirstName, LastName, UserName, Password, Email) "
-                               "VALUES (%s, %s, %s, %s, %s)",
-                               (firstname, lastname, username, password, email))
-                conn.commit()
-                flash('Registration successful', 'success')
-                return redirect(url_for('home'))
+                # Check if email already exists
+                cursor.execute("SELECT * FROM USERS WHERE Email = %s", (email,))
+                existing_email = cursor.fetchone()
+
+                if existing_email:
+                    flash('Email address already in use. Please use a different email address.', 'error')
+                else:
+                    # Insert new user
+                    cursor.execute("INSERT INTO USERS (FirstName, LastName, UserName, Password, Email) "
+                                   "VALUES (%s, %s, %s, %s, %s)",
+                                   (firstname, lastname, username, password, email))
+                    conn.commit()
+                    flash('Registration successful', 'success')
+                    return redirect(url_for('home'))
 
         except Exception as e:
             flash(f'Error: {str(e)}', 'error')
