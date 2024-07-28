@@ -116,27 +116,36 @@ def register():
         email = request.form['email']
 
         try:
-            # Check if user already exists
+            # Check if username already exists
             cursor.execute("SELECT * FROM USERS WHERE UserName = %s", (username,))
             existing_user = cursor.fetchone()
             if existing_user:
                 flash('Username already exists. Please choose another one.', 'error')
-            else:
-                # Insert new user
-                cursor.execute("INSERT INTO USERS (FirstName, LastName, UserName, Password, Email) "
-                               "VALUES (%s, %s, %s, %s, %s)",
-                               (firstname, lastname, username, password, email))
-                conn.commit()
-                flash('Registration successful', 'success')
-                body = f'Hello {firstname},\n\nYou have successfully registered.\n\nBest regards,\nSmartSaver Team'
-                send_email("Welcome to SmartSaver!", email, body)
-                return redirect(url_for('home'))
+                return redirect(url_for('register'))
+            
+            # Check if email already exists
+            cursor.execute("SELECT * FROM USERS WHERE Email = %s", (email,))
+            existing_email = cursor.fetchone()
+            if existing_email:
+                flash('Email address already in use. Please use a different email address.', 'error')
+                return redirect(url_for('register'))
+            
+            # Insert new user if username and email are unique
+            cursor.execute("INSERT INTO USERS (FirstName, LastName, UserName, Password, Email) "
+                           "VALUES (%s, %s, %s, %s, %s)",
+                           (firstname, lastname, username, password, email))
+            conn.commit()
+            flash('Registration successful', 'success')
+            body = f'Hello {firstname},\n\nYou have successfully registered.\n\nBest regards,\nSmartSaver Team'
+            send_email("Welcome to SmartSaver!", email, body)
+            return redirect(url_for('home'))
 
         except Exception as e:
             flash(f'Error: {str(e)}', 'error')
 
         finally:
             cursor.close()
+            conn.close()
 
     return render_template('register.html')
 
