@@ -3,8 +3,6 @@ from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import os
 import snowflake.connector as snowflake
-import datetime
-import timedelta
 from datetime import datetime, timedelta
 
 load_dotenv()
@@ -141,6 +139,7 @@ def register():
             cursor.close()
 
     return render_template('register.html')
+
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     user = session['username']
@@ -196,7 +195,6 @@ def settings():
         cursor.close()
 
     return render_template('settings.html', user=user_data, masked_password=masked_password)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -339,7 +337,6 @@ def savings_goals():
             conn.close()
 
     return render_template('SavingsGoals.html', username=session['username'])
-
 
 @app.route('/ViewGoals', methods=['GET', 'POST'])
 def view_goals():
@@ -535,6 +532,14 @@ def delete_goal():
         flash('Please log in to delete goals.', 'error')
         return redirect(url_for('home'))
 
+    try:
+        username = session['username']
+        created_at = request.form['created_at']
+        print(f"Received delete request for user {username} with created_at {created_at}")
+
+        # Convert created_at to datetime object
+        created_at_datetime = datetime.fromisoformat(created_at)
+        print(f"Parsed datetime: {created_at_datetime}")
     goal_id = request.form['goal_id']
 
     try:
@@ -542,11 +547,15 @@ def delete_goal():
         cursor = conn.cursor()
 
         # Delete the savings goal from the database
-        cursor.execute("DELETE FROM SAVINGS_GOAL_TRACKER WHERE id = %s AND username = %s", (goal_id, session['username']))
+        cursor.execute("DELETE FROM SAVINGS_GOAL_TRACKER WHERE username = %s AND created_at = %s", (username, created_at_datetime))
         conn.commit()
         
         flash('Savings goal deleted successfully.', 'success')
+    except KeyError as e:
+        print(f"Missing key in request.form: {str(e)}")
+        flash('Error: Missing key in form data.', 'error')
     except Exception as e:
+        print(f"Error deleting savings goal: {str(e)}")
         flash(f'Error deleting savings goal: {str(e)}', 'error')
     finally:
         cursor.close()
