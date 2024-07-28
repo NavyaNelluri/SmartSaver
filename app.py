@@ -7,7 +7,6 @@ import datetime
 import timedelta
 from datetime import datetime, timedelta
 
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -43,6 +42,69 @@ def get_db():
     )
     return conn
 
+def send_email(subject, recipient, body):
+    msg = Message(
+        subject,
+        sender=("SmartSaver", app.config['MAIL_USERNAME']),
+        recipients=[recipient]
+    )
+    msg.body = body
+    with app.app_context():
+        mail.send(msg)
+
+def send_expense_notification(user_email, user_name, expense_type, amount, frequency, notes):
+    subject = "Expense Added Notification"
+    body = f"""
+    Hello {user_name},
+
+    You have successfully added a new expense.
+
+    Details:
+    Expense Type: {expense_type}
+    Amount: ${amount}
+    Frequency: {frequency}
+    Notes: {notes}
+
+    Best regards,
+    SmartSaver Team
+    """
+    send_email(subject, user_email, body)
+
+def send_income_notification(user_email, user_name, income_source, amount, frequency):
+    subject = "Income Added Notification"
+    body = f"""
+    Hello {user_name},
+
+    You have successfully added a new income.
+
+    Details:
+    Income Source: {income_source}
+    Amount: ${amount}
+    Frequency: {frequency}
+
+    Best regards,
+    SmartSaver Team
+    """
+    send_email(subject, user_email, body)
+
+def send_savings_goal_notification(user_email, user_name, goal_item, goal_amount, allocation_percentage, monthly_income):
+    subject = "Savings Goal Added Notification"
+    body = f"""
+    Hello {user_name},
+
+    You have successfully added a new savings goal.
+
+    Details:
+    Savings Goal Item: {goal_item}
+    Savings Goal Amount: ${goal_amount}
+    Allocation Percentage: {allocation_percentage}%
+    Monthly Disposable Income: ${monthly_income}
+
+    Best regards,
+    SmartSaver Team
+    """
+    send_email(subject, user_email, body)
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -68,6 +130,8 @@ def register():
                                (firstname, lastname, username, password, email))
                 conn.commit()
                 flash('Registration successful', 'success')
+                body = f'Hello {firstname},\n\nYou have successfully registered.\n\nBest regards,\nSmartSaver Team'
+                send_email("Welcome to SmartSaver!", email, body)
                 return redirect(url_for('home'))
 
         except Exception as e:
@@ -194,15 +258,7 @@ def dashboard():
                 """, (username, frequency, expense_type, notes, amount))
                 conn.commit()
                 flash('Expense added successfully', 'success')
-
-                # Prepare and send email notification
-                subject = "Expense Added Notification"
-                body = f"Hello {first_name},\n\nYou have successfully added a new expense.\n\nDetails:\nExpense Type: {expense_type}\nAmount: ${amount}\nFrequency: {frequency}\nNotes: {notes}\n\nBest regards,\nSmartSaver Team"
-
-                msg = Message(subject, recipients=[email])
-                msg.body = body
-                mail.send(msg)
-
+                send_expense_notification(email, first_name, expense_type, amount, frequency, notes)
             elif form_type == 'income':
                 income_source = request.form['Notes']  # Adjust based on your form
                 cursor.execute("""
@@ -211,7 +267,7 @@ def dashboard():
                 """, (username, frequency, amount, income_source))
                 conn.commit()
                 flash('Income added successfully', 'success')
-
+                send_income_notification(email, first_name, income_source, amount, frequency)
         except Exception as e:
             flash(f'Error adding entry: {str(e)}', 'error')
 
@@ -274,15 +330,7 @@ def savings_goals():
                 VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP())
             """, (username, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome))
             conn.commit()
-
-            # Prepare and send email notification
-            subject = "Savings Goal Added Notification"
-            body = f"Hello {first_name},\n\nYou have successfully added a new savings goal.\n\nDetails:\nSavings Goal Item: {SavingsGoalItem}\nSavings Goal Amount: ${SavingsGoalAmount}\nAllocation Percentage: {AllocationPercentage}%\nMonthly Disposable Income: ${MonthlyDisposableIncome}\n\nBest regards,\nSmartSaver Team"
-
-            msg = Message(subject, recipients=[email])
-            msg.body = body
-            mail.send(msg)
-
+            send_savings_goal_notification(email, first_name, SavingsGoalItem, SavingsGoalAmount, AllocationPercentage, MonthlyDisposableIncome)
             flash('Goal saved successfully and email notification sent', 'success')
             cursor.close()
         except Exception as e:
@@ -480,6 +528,31 @@ def forgot_password():
             conn.close()
 
     return render_template('forgot_password.html')
+
+@app.route('/delete_goal', methods=['POST'])
+def delete_goal():
+    if 'username' not in session:
+        flash('Please log in to delete goals.', 'error')
+        return redirect(url_for('home'))
+
+    goal_id = request.form['goal_id']
+
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # Delete the savings goal from the database
+        cursor.execute("DELETE FROM SAVINGS_GOAL_TRACKER WHERE id = %s AND username = %s", (goal_id, session['username']))
+        conn.commit()
+        
+        flash('Savings goal deleted successfully.', 'success')
+    except Exception as e:
+        flash(f'Error deleting savings goal: {str(e)}', 'error')
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('view_goals'))
 
 if __name__ == '__main__':
     app.run(debug=True)
