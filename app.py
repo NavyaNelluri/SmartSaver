@@ -3,10 +3,7 @@ from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import os
 import snowflake.connector as snowflake
-import datetime
-import timedelta
 from datetime import datetime, timedelta
-
 
 load_dotenv()
 
@@ -77,6 +74,7 @@ def register():
             cursor.close()
 
     return render_template('register.html')
+
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     user = session['username']
@@ -132,7 +130,6 @@ def settings():
         cursor.close()
 
     return render_template('settings.html', user=user_data, masked_password=masked_password)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -291,7 +288,6 @@ def savings_goals():
             conn.close()
 
     return render_template('SavingsGoals.html', username=session['username'])
-
 
 @app.route('/ViewGoals', methods=['GET', 'POST'])
 def view_goals():
@@ -480,6 +476,46 @@ def forgot_password():
             conn.close()
 
     return render_template('forgot_password.html')
+
+@app.route('/delete_goal', methods=['POST'])
+def delete_goal():
+    if 'username' not in session:
+        flash('Please log in to delete goals.', 'error')
+        return redirect(url_for('home'))
+
+    try:
+        username = session['username']
+        created_at = request.form['created_at']
+        print(f"Received delete request for user {username} with created_at {created_at}")
+
+        # Convert created_at to datetime object
+        created_at_datetime = datetime.fromisoformat(created_at)
+        print(f"Parsed datetime: {created_at_datetime}")
+
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # Delete the savings goal from the database
+        cursor.execute("DELETE FROM SAVINGS_GOAL_TRACKER WHERE username = %s AND created_at = %s", (username, created_at_datetime))
+        conn.commit()
+        
+        flash('Savings goal deleted successfully.', 'success')
+    except KeyError as e:
+        print(f"Missing key in request.form: {str(e)}")
+        flash('Error: Missing key in form data.', 'error')
+    except Exception as e:
+        print(f"Error deleting savings goal: {str(e)}")
+        flash(f'Error deleting savings goal: {str(e)}', 'error')
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('view_goals'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
