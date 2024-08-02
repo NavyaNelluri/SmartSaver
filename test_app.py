@@ -2,6 +2,10 @@ import unittest
 from app import app, get_db, send_email
 from unittest.mock import patch
 import unittest.mock
+from unittest.mock import patch, Mock
+from app import send_expense_notification  
+
+
 
 class AppTestCase(unittest.TestCase):
     def setUp(self):
@@ -115,8 +119,79 @@ class AppTestCase(unittest.TestCase):
         response = self.app.get('/view_income')
 
         self.assertEqual(response.status_code, 200)
-
-
+    @patch('app.get_db')
+    def test_forgot_password_failure(self, mock_get_db):
+        mock_cursor = unittest.mock.Mock()
+        mock_get_db.return_value.cursor.return_value = mock_cursor
     
+        # Simulate that the user exists but the new passwords do not match
+        mock_cursor.fetchone.return_value = ('John', 'Doe', 'johndoe', 'oldpassword', 'john@example.com')
+    
+        response = self.app.post('/forgot_password', data={
+            'username': 'johndoe',
+            'email': 'john@example.com',
+            'new_password': 'newpassword123',
+            'confirm_password': 'differentpassword123'
+        }, follow_redirects=True)
+    
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Passwords do not match', response.data)
+    def setUp(self):
+        app.config['TESTING'] = True
+        self.app = app.test_client()
+        self.mock_session = {}  # Create a mock session dictionary
+
+    def tearDown(self):
+        pass
+
+    @patch('app.get_db')
+    @patch('app.send_expense_notification')
+    def test_add_expense_success(self, mock_send_expense_notification, mock_get_db):
+        # Mock database cursor and fetch user info
+        mock_cursor = Mock()
+        mock_get_db.return_value.cursor.return_value = mock_cursor
+        mock_cursor.fetchone.return_value = ('John Doe', 'johndoe@example.com')
+
+        # Simulate login by setting mock session data
+        self.mock_session['username'] = 'johndoe'
+        with self.app.session_transaction() as session:
+            session.update(self.mock_session)
+
+        # Send POST request to add an expense
+        response = self.app.post('/dashboard', data={
+            'form_type': 'expense',
+            'expense_type': 'Utilities',
+            'frequency': 'Monthly',
+            'Notes': 'Electricity',
+            'dollars': '100'
+        }, follow_redirects=True)
+
+        # Check response and if notification was sent
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(mock_send_expense_notification.called)
+    @patch('app.get_db')
+    @patch('app.send_income_notification')  # Replace with the correct function if different
+    def test_add_income_success(self, mock_send_income_notification, mock_get_db):
+        # Mock database cursor and fetch user info
+        mock_cursor = Mock()
+        mock_get_db.return_value.cursor.return_value = mock_cursor
+        mock_cursor.fetchone.return_value = ('John Doe', 'johndoe@example.com')
+
+        # Simulate login by setting mock session data
+        self.mock_session['username'] = 'johndoe'
+        with self.app.session_transaction() as session:
+            session.update(self.mock_session)
+
+        # Send POST request to add an income
+        response = self.app.post('/dashboard', data={
+            'form_type': 'income',
+            'frequency': 'Monthly',
+            'Notes': 'Salary',
+            'dollars': '5000'
+        }, follow_redirects=True)
+
+        # Check response and if notification was sent
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(mock_send_income_notification.called)
 if __name__ == '__main__':
     unittest.main()
