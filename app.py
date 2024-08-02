@@ -263,10 +263,9 @@ def dashboard():
                     INSERT INTO expense_tracker (username, frequency, expense_type, notes, amount)
                     VALUES (%s, %s, %s, %s, %s)
                 """, (username, frequency, expense_type, notes, amount))
-                send_expense_notification(email, first_name, expense_type, amount, frequency, notes)
-                flash('Expense added successfully', 'success')
                 conn.commit()
-
+                flash('Expense added successfully', 'success')
+                send_expense_notification(email, first_name, expense_type, amount, frequency, notes)
             elif form_type == 'income':
                 income_source = request.form['Notes']  # Adjust based on your form
                 cursor.execute("""
