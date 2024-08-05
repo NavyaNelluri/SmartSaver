@@ -27,7 +27,7 @@ jobs:
           pip install flask  # Add other required packages here, e.g., flask, pytest
           pip install flask_mail
           pip install flask snowflake-connector-python datetime
-
+          pip install python-dotenv
       - name: Run Unit Tests
         run: python -m unittest test_app.py
         continue-on-error: false
