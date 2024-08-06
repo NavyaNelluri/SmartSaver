@@ -297,6 +297,57 @@ def dashboard():
         for income in incomes:
             income_labels.append(income[0])
             income_data.append(float(income[1]))
+        cursor.execute("""
+            WITH TotalIncome AS (
+                SELECT
+                    USERNAME,
+                    SUM(
+                        CASE
+                            WHEN FREQUENCY = 'weekly' THEN AMOUNT * 4
+                            WHEN FREQUENCY = 'Biweekly' THEN AMOUNT * 2
+                            WHEN FREQUENCY = 'monthly' THEN AMOUNT
+                            ELSE AMOUNT
+                        END
+                    ) AS TotalIncome
+                FROM INCOME_TRACKER
+                WHERE USERNAME = %s
+                GROUP BY USERNAME
+            ),
+            TotalExpenses AS (
+                SELECT
+                    USERNAME,
+                    SUM(
+                        CASE
+                            WHEN FREQUENCY = 'weekly' THEN AMOUNT * 4
+                            WHEN FREQUENCY = 'Biweekly' THEN AMOUNT * 2
+                            WHEN FREQUENCY = 'monthly' THEN AMOUNT
+                            ELSE AMOUNT
+                        END
+                    ) AS TotalExpenses
+                FROM EXPENSE_TRACKER
+                WHERE USERNAME = %s
+                GROUP BY USERNAME
+            ),
+            TotalSavingsSpent AS (
+                SELECT
+                    USERNAME,
+                    SUM((ALLOCATIONPERCENTAGE / 100) * MONTHLYDISPOSABLEINCOME) AS TotalAmountSpentOnSavingsGoals
+                FROM SAVINGS_GOAL_TRACKER
+                WHERE USERNAME = %s
+                GROUP BY USERNAME
+            )
+            SELECT
+                i.USERNAME,
+                COALESCE(i.TotalIncome, 0) - COALESCE(e.TotalExpenses, 0) - COALESCE(s.TotalAmountSpentOnSavingsGoals, 0) AS FinalAmountLeft
+            FROM
+                TotalIncome i
+            LEFT JOIN
+                TotalExpenses e ON i.USERNAME = e.USERNAME
+            LEFT JOIN
+                TotalSavingsSpent s ON i.USERNAME = s.USERNAME
+        """, (session['username'], session['username'], session['username']))
+        financial_summary = cursor.fetchone()
+        final_amount_left = financial_summary[1] if financial_summary else 0
 
     except Exception as e:
         flash(f'Error fetching data: {str(e)}', 'error')
@@ -308,7 +359,7 @@ def dashboard():
     finally:
         cursor.close()
 
-    return render_template('dashboard.html', username=session['username'], expense_labels=expense_labels, expense_data=expense_data, income_labels=income_labels, income_data=income_data)
+    return render_template('dashboard.html', username=session['username'], expense_labels=expense_labels, expense_data=expense_data, income_labels=income_labels, income_data=income_data, final_amount_left=round(final_amount_left, 2))
 
 @app.route('/SavingsGoals', methods=['GET', 'POST'])
 def savings_goals():

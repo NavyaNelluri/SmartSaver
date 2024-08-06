@@ -207,7 +207,8 @@ nav a:hover {
                     </script>
                 {% endif %}
             {% endwith %}
-            
+            <p>Final Amount Left: {{ final_amount_left }}</p>
+
             <label for="inputType">Choose input type:</label>
             <select id="inputType" onchange="toggleForms()" required>
                 <option value="" disabled selected>Select input type</option>
