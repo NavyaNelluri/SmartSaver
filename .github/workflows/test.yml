@@ -32,15 +32,7 @@ jobs:
         run: python -m unittest test_app.py
         continue-on-error: false
 
-      - name: Build Project
-        run: |
-          # Replace this with your actual build command
-          echo "SmartSaver"
-          mkdir -p build  # Create build directory if not exists
-          # Simulate build artifacts creation
-          cp -r templates/* build/  # Copy any necessary template files
-          cp -r static/* build/  # Copy any necessary static files
-        if: success()
+      
 
       - name: Archive Artifacts
         if: success()
