@@ -118,11 +118,13 @@
     </style>
 </head>
 <body>
+    <!-- Background video -->
     <video autoplay muted loop id="bg-video">
         <source src="{{ url_for('static', filename='savings.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
+    <!-- Navigation menu -->
     <nav>
         <a href="{{ url_for('dashboard') }}">Dashboard</a>
         <a href="{{ url_for('savings_goals') }}">Set Savings Goals</a>
@@ -133,6 +135,7 @@
     </nav>
 
     <div class="main-container">
+        <!-- Forecasting Goals Container -->
         <div class="container">
             <h1>Forecast Your Goals</h1>
             <label for="monthlyIncome">Monthly Disposable Income ($):</label>
@@ -152,6 +155,7 @@
             </div>
         </div>
         
+        <!-- Set Savings Goals Container -->
         <div class="container">
             <h1>Set Your Savings Goals</h1>
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -161,9 +165,10 @@
                         {{ latest_message[1] }}
                     </div>
                     <script>
+                        // Hide alert message after 5 seconds
                         setTimeout(function() {
                             document.querySelector('.alert').style.display = 'none';
-                        }, 5000);  // Adjust the timeout (in milliseconds) as needed
+                        }, 5000);
                     </script>
                 {% endif %}
             {% endwith %}
@@ -186,6 +191,57 @@
     </div>
 
     <script>
+        // Simple Linked List implementation for Savings Goals
+        class Node {
+            constructor(data) {
+                this.data = data;
+                this.next = null;
+            }
+        }
+
+        class LinkedList {
+            constructor() {
+                this.head = null;
+            }
+
+            // Add a node to the linked list
+            add(data) {
+                let newNode = new Node(data);
+                if (this.head === null) {
+                    this.head = newNode;
+                } else {
+                    let current = this.head;
+                    while (current.next) {
+                        current = current.next;
+                    }
+                    current.next = newNode;
+                }
+            }
+
+            // Display all nodes in the linked list
+            display() {
+                let current = this.head;
+                while (current) {
+                    console.log(current.data);
+                    current = current.next;
+                }
+            }
+        }
+
+        // Create a new linked list instance for savings goals
+        let savingsGoalsList = new LinkedList();
+
+        // Add a savings goal to the linked list
+        function addSavingsGoal(item, amount, percentage) {
+            let goal = {
+                item: item,
+                amount: amount,
+                percentage: percentage
+            };
+            savingsGoalsList.add(goal);
+        }
+
+        // Calculate the forecasted time to achieve the savings goal
         function calculateTime() {
             var monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
             var goalAmount = parseFloat(document.getElementById('goalAmount').value);
@@ -200,8 +256,6 @@
                 document.getElementById('forecastResult').textContent = "Invalid input. Please enter valid numbers.";
             }
         }
-
-        
     </script>
 </body>
 </html>
