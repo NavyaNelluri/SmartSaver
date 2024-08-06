@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          python -m unittest discover -s tests  # Adjust this if your tests are in a different directory or use pytest
+          python -m unittest test_app.py  # Adjust this if your tests are in a different directory or use pytest
         continue-on-error: false
 
       - name: Build Project
