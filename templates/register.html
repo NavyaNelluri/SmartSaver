@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <!-- Inline CSS for styling -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -167,16 +168,19 @@
     </style>
 </head>
 <body>
+    <!-- Background video -->
     <video autoplay muted loop id="bg-video">
         <source src="{{ url_for('static', filename='bgvideo.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <div class="overlay">
         <div class="container">
+            <!-- Description of SmartSaver -->
             <div class="description">
                 <h2>About SmartSaver</h2>
                 <p>SmartSaver is a budget forecasting application designed to help users manage their finances efficiently. By allowing users to input their income and expenses, the app will forecast monthly budgets, set savings goals, and predict the time required to achieve these goals based on disposable income allocation.</p>
             </div>
+            <!-- Registration form -->
             <div class="form-container">
                 <h2>Register</h2>
                 {% with messages = get_flashed_messages(with_categories=true) %}

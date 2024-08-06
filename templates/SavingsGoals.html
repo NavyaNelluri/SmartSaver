@@ -239,6 +239,7 @@
                 percentage: percentage
             };
             savingsGoalsList.add(goal);
+            saveGoalToLocalStorage(item, amount, percentage); // Save to local storage
         }
 
         // Calculate the forecasted time to achieve the savings goal
@@ -255,6 +256,13 @@
             } else {
                 document.getElementById('forecastResult').textContent = "Invalid input. Please enter valid numbers.";
             }
+        }
+
+        // Save goal data to local storage
+        function saveGoalToLocalStorage(item, amount, percentage) {
+            let goals = JSON.parse(localStorage.getItem('savingsGoals')) || [];
+            goals.push({ item, amount, percentage });
+            localStorage.setItem('savingsGoals', JSON.stringify(goals));
         }
     </script>
 </body>

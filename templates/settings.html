@@ -61,8 +61,8 @@
       background: rgba(255, 255, 255, 0.9);
       border-radius: 8px;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-      width: 80%; /* Adjust width as needed */
-      max-width: 1200px;
+      width: 90%; /* Adjust width as needed */
+      max-width: 800px; /* Adjust max-width for better responsiveness */
     }
 
     h1 {
@@ -155,9 +155,15 @@
           {{ latest_message[1] }}
         </div>
         <script>
-          setTimeout(function() {
-            document.querySelector('.alert').style.display = 'none';
-          }, 5000);
+          // Hide the alert message if it exists
+          document.addEventListener('DOMContentLoaded', function() {
+            let alert = document.querySelector('.alert');
+            if (alert) {
+              setTimeout(function() {
+                alert.style.display = 'none';
+              }, 5000);
+            }
+          });
         </script>
       {% endif %}
     {% endwith %}
@@ -175,13 +181,13 @@
       <input type="email" id="email" name="email" value="{{ user[3] }}" required>
       
       <label for="current_password">Current Password:</label>
-      <input type="text" id="current_password" name="current_password" required>
+      <input type="password" id="current_password" name="current_password" required>
       
       <label for="new_password">New Password (leave blank to keep current password):</label>
-      <input type="password" id="new_password" name="new_password">
+      <input type="password" id="new_password" name="new_password" placeholder="New password (optional)">
       
       <label for="confirm_password">Confirm New Password:</label>
-      <input type="password" id="confirm_password" name="confirm_password">
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password (optional)">
       
       <button type="submit">Update</button>
     </form>

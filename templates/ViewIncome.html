@@ -51,18 +51,18 @@
       color: #FFD700;
     }
 
-      .main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 80px auto 20px auto; /* Top and bottom margin, auto for left and right */
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  width: 80%; /* Adjust width as needed */
-  max-width: 1200px;
-}
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 80px auto 20px auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 1200px;
+    }
 
     h1 {
       font-size: 32px;
@@ -152,19 +152,19 @@
     }
 
     .alert-success {
-      background-color: #2ecc71; /* Green */
+      background-color: #2ecc71;
     }
 
     .alert-error {
-      background-color: #e74c3c; /* Red */
+      background-color: #e74c3c;
     }
 
     .alert-warning {
-      background-color: #f39c12; /* Orange */
+      background-color: #f39c12;
     }
 
     .alert-info {
-      background-color: #3498db; /* Blue */
+      background-color: #3498db;
     }
   </style>
 </head>
@@ -193,7 +193,10 @@
         </div>
         <script>
           setTimeout(function() {
-            document.querySelector('.alert').style.display = 'none';
+            var alert = document.querySelector('.alert');
+            if (alert) {
+              alert.style.display = 'none';
+            }
           }, 5000);
         </script>
       {% endif %}
@@ -212,9 +215,9 @@
         <tr>
           <td>{{ income[0] }}</td>
           <td>{{ income[1] }}</td>
-          <td>{{ income[2] }}</td>
+          <td>${{ income[2] }}</td>
           <td>
-            <button class="edit-button" onclick="toggleEditForm('{{ income[3] }}')">Edit</button>
+            <button class="edit-button" aria-label="Edit income source '{{ income[0] }}'" onclick="toggleEditForm('{{ income[3] }}')">Edit</button>
           </td>
         </tr>
         <tr class="edit-form" id="editForm{{ income[3] }}">
@@ -222,7 +225,7 @@
             <form method="POST" action="{{ url_for('edit_income', income_id=income[3]) }}">
               <input type="hidden" name="income_id" value="{{ income[3] }}">
               <label for="frequency">Frequency:</label>
-              <select name="frequency" id="frequency">
+              <select name="frequency" id="frequency" required>
                 <option value="weekly" {% if income[1] == 'weekly' %}selected{% endif %}>Weekly</option>
                 <option value="bi-weekly" {% if income[1] == 'bi-weekly' %}selected{% endif %}>Bi-Weekly</option>
                 <option value="monthly" {% if income[1] == 'monthly' %}selected{% endif %}>Monthly</option>

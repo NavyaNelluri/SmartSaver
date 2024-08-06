@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>View Goals</title>
   <style>
-    /* Your existing CSS */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -49,7 +48,7 @@
     }
 
     nav a:hover {
-      color: #87CEEB; /* Light Sky Blue */
+      color: #87CEEB;
     }
 
     .main-container {
@@ -80,7 +79,7 @@
     }
 
     .goal-card {
-      background-color: #f8f9fa; /* Light Gray */
+      background-color: #f8f9fa;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -96,7 +95,7 @@
     .goal-item {
       font-size: 20px;
       font-weight: bold;
-      color: #4682b4; /* Steel Blue */
+      color: #4682b4;
       margin-bottom: 10px;
     }
 
@@ -117,14 +116,14 @@
     }
 
     .highlight {
-      background-color: #4682b4; /* Steel Blue */
+      background-color: #4682b4;
       color: white;
       padding: 3px 6px;
       border-radius: 4px;
     }
 
     .delete-button {
-      background-color: #e74c3c; /* Red */
+      background-color: #e74c3c;
       color: #fff;
       padding: 10px 20px;
       border: none;
@@ -137,7 +136,7 @@
     }
 
     .delete-button:hover {
-      background-color: #c0392b; /* Darker Red */
+      background-color: #c0392b;
     }
 
     .edit-form {
@@ -168,7 +167,7 @@
     }
 
     .edit-form button:hover {
-      background-color: #4169e1; /* Royal Blue */
+      background-color: #4169e1;
     }
 
     .edit-button {
@@ -182,7 +181,7 @@
     }
 
     .edit-button:hover {
-      background-color: #4169e1; /* Royal Blue */
+      background-color: #4169e1;
     }
 
     .alert {
@@ -196,19 +195,19 @@
     }
 
     .alert-success {
-      background-color: #2ecc71; /* Green */
+      background-color: #2ecc71;
     }
 
     .alert-error {
-      background-color: #e74c3c; /* Red */
+      background-color: #e74c3c;
     }
 
     .alert-warning {
-      background-color: #f39c12; /* Orange */
+      background-color: #f39c12;
     }
 
     .alert-info {
-      background-color: #4682b4; /* Steel Blue */
+      background-color: #4682b4;
     }
 
     .modal {
@@ -244,20 +243,20 @@
     }
 
     .cancel-button {
-      background-color: #bbb; /* Gray */
+      background-color: #bbb;
     }
 
     .cancel-button:hover {
-      background-color: #999; /* Darker Gray */
+      background-color: #999;
     }
 
     .confirm-button {
-      background-color: #e74c3c; /* Red */
+      background-color: #e74c3c;
       color: #fff;
     }
 
     .confirm-button:hover {
-      background-color: #c0392b; /* Darker Red */
+      background-color: #c0392b;
     }
   </style>
 </head>
@@ -286,7 +285,10 @@
         </div>
         <script>
           setTimeout(function() {
-            document.querySelector('.alert').style.display = 'none';
+            var alert = document.querySelector('.alert');
+            if (alert) {
+              alert.style.display = 'none';
+            }
           }, 5000);
         </script>
       {% endif %}
@@ -302,34 +304,33 @@
           <span><strong>Created At:</strong> {{ goal[5].strftime('%Y-%m-%d %H:%M:%S') }}</span>
           <span><strong>Months Left to Achieve Goal:</strong> <span class="highlight">{{ goal[6] }}</span></span>
         </div>
-        <button class="delete-button" onclick="confirmDelete('{{ goal[5].isoformat() }}')">Delete</button>
-
+        <button class="delete-button" aria-label="Delete goal created at {{ goal[5].strftime('%Y-%m-%d %H:%M:%S') }}" onclick="confirmDelete('{{ goal[5].isoformat() }}')">Delete</button>
       </div>
       {% endfor %}
     </div>
   </div>
 
-<div id="deleteModal" class="modal">
-  <div class="modal-content">
-    <p id="modalText">Are you sure you want to delete this goal?</p>
-    <button class="cancel-button" onclick="closeModal()">Cancel</button>
-    <form id="deleteForm" method="POST" action="{{ url_for('delete_goal') }}">
-      <input type="hidden" name="created_at" id="createdAt">
-      <button type="submit" class="confirm-button">Confirm</button>
-    </form>
+  <div id="deleteModal" class="modal" role="dialog" aria-labelledby="modalText" aria-hidden="true">
+    <div class="modal-content">
+      <p id="modalText">Are you sure you want to delete this goal?</p>
+      <button class="cancel-button" onclick="closeModal()">Cancel</button>
+      <form id="deleteForm" method="POST" action="{{ url_for('delete_goal') }}">
+        <input type="hidden" name="created_at" id="createdAt">
+        <button type="submit" class="confirm-button">Confirm</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<script>
-  function confirmDelete(createdAt) {
-    document.getElementById('modalText').innerText = `Are you sure you want to delete the goal created at ${createdAt}?`;
-    document.getElementById('createdAt').value = createdAt;
-    document.getElementById('deleteModal').style.display = 'block';
-  }
+  <script>
+    function confirmDelete(createdAt) {
+      document.getElementById('modalText').innerText = `Are you sure you want to delete the goal created at ${createdAt}?`;
+      document.getElementById('createdAt').value = createdAt;
+      document.getElementById('deleteModal').style.display = 'block';
+    }
 
-  function closeModal() {
-    document.getElementById('deleteModal').style.display = 'none';
-  }
+    function closeModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+    }
   </script>
 </body>
 </html>
