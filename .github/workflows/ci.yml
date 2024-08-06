@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - AS_ci/cd
+      - krishna_sprint2
   pull_request:
     branches:
-      - AS_ci/cd
+      - krishna_sprint2
 
 jobs:
   build:
