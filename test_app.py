@@ -135,7 +135,7 @@ class AppTestCase(unittest.TestCase):
         }, follow_redirects=True)
     
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Passwords do not match', response.data)
+        self.assertIn(b'Passwords do not match1', response.data)
     def setUp(self):
         app.config['TESTING'] = True
         self.app = app.test_client()
