@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
-          path: build/  # Adjust the path as needed
+          path: Target/  # Adjust the path as needed
 
   fail-check:
     runs-on: ubuntu-latest
