@@ -39,12 +39,17 @@ jobs:
           echo "Build completed successfully"
         if: success()
 
+      - name: Create Zip File
+        if: success()
+        run: |
+          zip -r build.zip build/
+
       - name: Archive Artifacts
         if: success()
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
-          path: Target/  # Adjust the path as needed
+          path: Target/build.zip 
 
   fail-check:
     runs-on: ubuntu-latest
