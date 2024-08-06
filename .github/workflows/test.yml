@@ -35,10 +35,12 @@ jobs:
       - name: Build Project
         run: |
           # Replace this with your actual build command
-          echo "Building project..."
+          echo "SmartSaver"
           mkdir -p build  # Create build directory if not exists
           # Simulate build artifacts creation
-          echo "Build artifact content" > build/artifact.txt
+          cp -r config/* build/  # Assuming you have config files in a config directory
+          cp -r templates/* build/  # Copy any necessary template files
+          cp -r static/* build/  # Copy any necessary static files
         if: success()
 
       - name: Archive Artifacts
