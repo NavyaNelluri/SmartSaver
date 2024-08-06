@@ -5,41 +5,41 @@
     <title>{{ subject }}</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
+            font-family: Arial, sans-serif; /* Sets the font for the email body */
+            line-height: 1.6; /* Improves readability by increasing line height */
+            margin: 20px; /* Adds margin around the email body */
         }
         .container {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            max-width: 600px;
-            margin: auto;
+            padding: 20px; /* Adds padding inside the container */
+            border: 1px solid #ddd; /* Light border around the container */
+            border-radius: 5px; /* Rounded corners for the container */
+            max-width: 600px; /* Maximum width of the container */
+            margin: auto; /* Centers the container */
         }
         .header {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 24px; /* Font size for the header */
+            font-weight: bold; /* Makes the header text bold */
+            margin-bottom: 10px; /* Margin below the header */
         }
         .content {
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Margin below the content */
         }
         .footer {
-            font-size: 14px;
-            color: #777;
+            font-size: 14px; /* Font size for the footer */
+            color: #777; /* Color for the footer text */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">{{ subject }}</div>
+        <div class="header">{{ subject }}</div> <!-- Email subject -->
         <div class="content">
-            <p>Hello {{ first_name }},</p>
-            <p>{{ message }}</p>
+            <p>Hello {{ first_name }},</p> <!-- Greeting with recipient's first name -->
+            <p>{{ message }}</p> <!-- Main message content -->
             <p>Details:</p>
             <ul>
                 {% for key, value in details.items() %}
-                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                <li><strong>{{ key }}:</strong> {{ value }}</li> <!-- Dynamic details list -->
                 {% endfor %}
             </ul>
         </div>

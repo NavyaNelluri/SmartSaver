@@ -3,202 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-	<style>
-	/* Reset default margin and padding for all elements */
-* {
-    margin: 0;
-    padding: 0;
-}
+    <style>
+        /* Reset default margin and padding for all elements */
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    overflow: hidden; 
-}
+        /* Styles for the body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            overflow: hidden; /* Prevent scrollbars */
+        }
 
+        /* Container styles */
+        .container {
+            position: relative;
+            text-align: center;
+            padding: 20px;
+            z-index: 2; /* Ensure content is above the video */
+        }
 
-.container {
-    position: relative;
-    text-align: center;
-    padding: 20px;
-    z-index: 2; /* Ensure content is above the video */
-}
-.slide-in {
-    position: relative;
-    text-align: center;
-	color : green;
-	    z-index: 2; /* Ensure content is above the video */
+        /* Slide-in effect for main heading */
+        .slide-in {
+            position: relative;
+            text-align: center;
+            color: green;
+            z-index: 2; /* Ensure content is above the video */
+        }
 
-	}
-	
-.home-content1 {
-    position: relative;
-    z-index: 2;
-    color: white;
-}
+        /* Styles for main content area */
+        .home-content1 {
+            position: relative;
+            z-index: 2;
+            color: white;
+        }
 
-.home-content1 p {
-    text-align: justify;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
+        .home-content1 p {
+            text-align: justify;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
 
-#bg-video {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1;
-}
+        /* Background video styles */
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1; /* Behind other content */
+        }
 
-.heading1, .heading2, .heading3 {
-    position: absolute;
-    color: #fff;
-    font-size: 24px;
-    font-weight: bold;
-    animation: slide-in 2s ease-out forwards;
-}
+        /* Heading styles with slide-in animation */
+        .heading1, .heading2, .heading3 {
+            position: absolute;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            animation: slide-in 2s ease-out forwards;
+        }
 
-.heading1 {
-    top: 150px;
-    left: 250px;
-}
+        .heading1 {
+            top: 150px;
+            left: 250px;
+        }
 
-.heading2 {
-    top: 350px;
-    left: 250px;
-}
+        .heading2 {
+            top: 350px;
+            left: 250px;
+        }
 
-.heading3 {
-    top: 550px;
-    left: 270px;
-}
+        .heading3 {
+            top: 550px;
+            left: 270px;
+        }
 
-.login-box {
-    position: absolute;
-    top: 100px;
-    right: 100px;
-    padding: 40px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-    z-index: 2;
-}
+        /* Login box styles */
+        .login-box {
+            position: absolute;
+            top: 100px;
+            right: 100px;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            z-index: 2;
+        }
 
-.login-box h2 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
+        .login-box h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
 
-.login-box form {
-    text-align: left;
-}
+        .login-box form {
+            text-align: left;
+        }
 
-.login-box label {
-    display: block;
-    margin-bottom: 8px;
-}
+        .login-box label {
+            display: block;
+            margin-bottom: 8px;
+        }
 
-.login-box input[type="text"],
-.login-box input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-.login-box button {
-    background-color: #e65c00;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
+        .login-box button {
+            background-color: #e65c00;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-.login-box button:hover {
-    background-color: #e65c00;
-	transform: scale(1.05);
+        .login-box button:hover {
+            background-color: #e65c00;
+            transform: scale(1.05);
+        }
 
-}
+        /* Register box styles */
+        .register-box {
+            color: white;
+            position: absolute;
+            top: 450%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            padding: 40px;
+            text-align: center;
+            z-index: 2;
+        }
 
-.register-box {    
-	color: white;
+        .register-box h2 {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
 
+        .register-box .register-button {
+            display: inline-block;
+            background-color: #ff6600;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
 
-    position: absolute;
-    top: 450%;
-    left: 45%;
-    transform: translate(-50%, -50%);
-    padding: 40px;
-    text-align: center;
-    z-index: 2;
-}
+        .register-box .register-button:hover {
+            background-color: #e65c00;
+            transform: scale(1.05);
+        }
 
-.register-box h2 {
-    font-size: 35px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
+        /* Forgot password link styles */
+        .forgot-password-link {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
 
-.register-box .register-button {
-    display: inline-block;
-    background-color: #ff6600;
-    color: white;
-    padding: 15px 30px;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
+        .forgot-password-link a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
 
-.register-box .register-button:hover {
-    background-color: #e65c00;
-    transform: scale(1.05);
-}
+        .forgot-password-link a:hover {
+            color: #555;
+        }
 
-.forgot-password-link {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #333;
-    text-align: center;
-}
-
-.forgot-password-link a {
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.forgot-password-link a:hover {
-    color: #555;
-}
-
-@keyframes slide-in {
-    0% {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-
-</style>
+        /* Slide-in animation keyframes */
+        @keyframes slide-in {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- Main heading with slide-in effect -->
         <h1 class="slide-in">Manage Your Finances with SmartSaver</h1>
+        
+        <!-- Content area with headings and background video -->
         <div class="home-content1">
             <div class="heading1">
                 <p>Forecast</p>
@@ -214,8 +221,12 @@ body {
                 Your browser does not support the video tag.
             </video>
         </div>
+        
+        <!-- Login box -->
         <div class="login-box">
             <h2>Login</h2>
+            
+            <!-- Display flash messages -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -223,6 +234,8 @@ body {
                     {% endfor %}
                 {% endif %}
             {% endwith %}
+            
+            <!-- Login form -->
             <form action="{{ url_for('home') }}" method="POST">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required><br><br>
@@ -232,14 +245,14 @@ body {
                 
                 <button type="submit">Login</button>
                 <p class="forgot-password-link"><a href="{{ url_for('forgot_password') }}">Forgot Password?</a></p>
-            
-			</form>
+            </form>
         </div>
-		 <div class="register-box" color = "white">
+        
+        <!-- Register box -->
+        <div class="register-box">
             <h2>Manage Your Finances with SmartSaver</h2>
             <a href="{{ url_for('register') }}" class="register-button">Sign Up</a>
         </div>
-        
     </div>
 </body>
 </html>

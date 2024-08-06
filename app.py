@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import snowflake.connector as snowflake
 from datetime import datetime, timedelta
+import logging
 
 load_dotenv()
 
