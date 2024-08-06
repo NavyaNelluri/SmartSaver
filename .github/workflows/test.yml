@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          pytest
+          pytest test_app.py
         continue-on-error: false
 
       - name: Verify Directory Structure (Debugging)
