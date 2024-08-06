@@ -64,20 +64,38 @@ jobs:
     needs: build  # Ensures this job runs after the build job
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           name: build-artifacts
 
-      - name: Check if Build Failed
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install Dependencies
         run: |
-          echo "Checking build failure..."
-          if [ -f "build.zip" ]; then
-            echo "Build artifacts are present."
-          else
-            echo "Build artifacts are missing. Build may have failed."
+          python -m pip install --upgrade pip
+          pip install flask flask_mail snowflake-connector-python datetime python-dotenv pytest
+
+      - name: Run Unit Tests
+        run: |
+          pytest test_app.py
+        continue-on-error: false
+
+      - name: Check if Build Failed
+        shell: pwsh
+        run: |
+          if (Test-Path "build.zip") {
+            Write-Output "Build artifacts are present."
+          } else {
+            Write-Output "Build artifacts are missing. Build may have failed."
             exit 1
-          fi
+          }
 
       - name: Notify Failure
         if: failure()
