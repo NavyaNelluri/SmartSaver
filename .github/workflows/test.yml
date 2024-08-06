@@ -32,6 +32,15 @@ jobs:
         run: python -m unittest test_app.py
         continue-on-error: false
 
+      - name: Build Project
+        run: |
+          # Replace this with your actual build command
+          echo "Building project..."
+          mkdir -p build  # Create build directory if not exists
+          # Simulate build artifacts creation
+          echo "Build artifact content" > build/artifact.txt
+        if: success()
+
       - name: Archive Artifacts
         if: success()
         uses: actions/upload-artifact@v2
@@ -39,11 +48,6 @@ jobs:
           name: build-artifacts
           path: build/
 
-      - name: Build Project
-        run: |
-          # Replace this with your build command
-          echo "Building project..."
-        if: success()
 
   fail-check:
     runs-on: ubuntu-latest
