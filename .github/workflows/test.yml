@@ -38,7 +38,6 @@ jobs:
           echo "SmartSaver"
           mkdir -p build  # Create build directory if not exists
           # Simulate build artifacts creation
-          cp -r config/* build/  # Assuming you have config files in a config directory
           cp -r templates/* build/  # Copy any necessary template files
           cp -r static/* build/  # Copy any necessary static files
         if: success()
