@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - AS_CICD
+      
   
 jobs:
   build:
