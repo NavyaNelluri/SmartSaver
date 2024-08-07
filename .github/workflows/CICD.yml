@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - NN_CICD
+      - main
   
 jobs:
   build:
