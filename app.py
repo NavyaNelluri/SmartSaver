@@ -243,6 +243,8 @@ def dashboard():
 
     conn = get_db()
     cursor = conn.cursor()
+    final_amount_left = 0  # Initialize the variable
+
 
     if request.method == 'POST':
         username = session['username']

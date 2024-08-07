@@ -1,0 +1,100 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Runner type for the build job
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flask flask_mail snowflake-connector-python datetime python-dotenv pytest
+
+      - name: Run Unit Tests
+        run: |
+          pytest test_app.py
+        continue-on-error: false
+
+      - name: Verify Directory Structure (Debugging)
+        run: |
+          ls -R
+
+      - name: Build Project
+        run: |
+          mkdir -p build
+          cp -r templates/* build/ || echo "No templates directory"
+          cp -r static/* build/ || echo "No static directory"
+          echo "Build completed successfully"
+        if: success()
+
+      - name: Verify Build Directory (Debugging)
+        run: |
+          ls -R build
+
+      - name: Create Zip File
+        if: success()
+        run: |
+          zip -r build.zip build/
+
+      - name: Archive Artifacts
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: build.zip 
+
+  test:
+    runs-on: windows-latest  # Runner type for the test job
+    needs: build  # Ensures this job runs after the build job
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flask flask_mail snowflake-connector-python datetime python-dotenv pytest
+
+      - name: Run Unit Tests
+        run: |
+          pytest test_app.py
+        continue-on-error: false
+
+      - name: Check if Build Failed
+        shell: pwsh
+        run: |
+          if (Test-Path "build.zip") {
+            Write-Output "Build artifacts are present."
+          } else {
+            Write-Output "Build artifacts are missing. Build may have failed."
+            exit 1
+          }
+
+      - name: Notify Failure
+        if: failure()
+        run: |
+          echo "Build or test failed. Please check the logs and fix issues."
